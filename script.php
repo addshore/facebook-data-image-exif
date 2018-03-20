@@ -16,9 +16,9 @@ $albums = glob( $directory . '/*', GLOB_ONLYDIR );
 
 echo "Got " . count( $albums ) . " albums from the input directory.\n";
 
-foreach ( $albums as $album ) {
-	echo "Running for album $album\n";
-	$indexFile = $album . '/index.htm';
+foreach ( $albums as $albumLocation ) {
+	echo "Running for album $albumLocation\n";
+	$indexFile = $albumLocation . '/index.htm';
 	$dom = DOMDocument::loadHTMLFile( $indexFile );
 	$finder = new DomXPath( $dom );
 	$blockNodes = $finder->query( "//*[contains(concat(' ', @class, ' '), ' block ')]" );
@@ -27,7 +27,7 @@ foreach ( $albums as $album ) {
 		$imgSrc = $imageNode->getAttribute( 'src' );
 		$imgSrcParts = explode( '/', $imgSrc );
 		$imgSrc = array_pop( $imgSrcParts );
-		$imgLocation = $album . '/' . $imgSrc;
+		$imgLocation = $albumLocation . '/' . $imgSrc;
 
 		echo "Running for file $imgLocation\n";
 
