@@ -1,19 +1,20 @@
 <?php
 
-// README: Set the path to the extracted facebook dump photos directory here
-$directory = 'C:/Users/username/Downloads/facebook-username/photos';
+// Licence GPL 2+ https://www.gnu.org/licenses/gpl-2.0.en.html
 
-// http://www.sno.phy.queensu.ca/~phil/exiftool/
-// README: Download this and set the path here (of the renamed exe)
-$tool = 'C:\Users\username\exiftool.exe';
-
-////////////////////////////////////////////////
-//     Do not touch anything below here...    // =]
-////////////////////////////////////////////////
+// Directory of the extracted facebook dump photos
+// Example: 'C:/Users/username/Downloads/facebook-username/photos'
+$directory = getenv( 'photosdirectory' );
+// Location of the exiftool script
+$tool = getenv( 'exiftool' );
 
 echo "Starting\n";
+echo "Using exiftool location: '" . $tool . "'\n";
+echo "Using input location: '" . $directory . "'\n";
 
 $albums = glob( $directory . '/*', GLOB_ONLYDIR );
+
+echo "Got " . count( $albums ) . " albums from the input directory.\n";
 
 foreach ( $albums as $album ) {
 	echo "Running for album $album\n";
