@@ -17,17 +17,28 @@ $albums = glob( $directory . '/*', GLOB_ONLYDIR );
 echo "Got " . count( $albums ) . " albums from the input directory.\n";
 
 foreach ( $albums as $albumLocation ) {
-	echo "Running for album $albumLocation\n";
-	$indexFile = $albumLocation . '/index.htm';
-	$dom = DOMDocument::loadHTMLFile( $indexFile );
+	$albumName = str_replace( $directory . DIRECTORY_SEPARATOR, '', $albumLocation );
+	$htmlLocation = $directory . DIRECTORY_SEPARATOR .  $albumName . '.html';
+	echo "Running for album $albumName\n";
+	$dom = DOMDocument::loadHTMLFile( $htmlLocation );
 	$finder = new DomXPath( $dom );
 	$blockNodes = $finder->query( "//*[contains(concat(' ', @class, ' '), ' block ')]" );
 	foreach ( $blockNodes as $blockNode ) {
-		$imageNode = $blockNode->firstChild;
-		$imgSrc = $imageNode->getAttribute( 'src' );
-		$imgSrcParts = explode( '/', $imgSrc );
-		$imgSrc = array_pop( $imgSrcParts );
-		$imgLocation = $albumLocation . '/' . $imgSrc;
+		$parsedUrl = parse_url( $blockNode->firstChild->getAttribute( 'src' ) );
+
+		// Break up the parsed URL a bit
+		$srcPath = $parsedUrl['path'];
+		$srcPathParts = explode( '/', $srcPath );
+		$srcFileName = array_pop( $srcPathParts );
+		$srcFileNameParts = explode( '_', $srcFileName );
+
+		// Set the file ID and type
+		$imgId = $srcFileNameParts[1];
+		// I'm pretty sure this is always actually jpg...
+		$imgType = explode( '.', array_pop( $srcFileNameParts ) )[1];
+
+		// Come up with the local file location
+		$imgLocation = $albumLocation . DIRECTORY_SEPARATOR . $imgId . '.' . $imgType;
 
 		echo "Running for file $imgLocation\n";
 
@@ -39,13 +50,14 @@ foreach ( $albums as $albumLocation ) {
 			$details[$rowNode->firstChild->textContent] = $rowNode->lastChild->textContent;
 		}
 
-		$toChange = '';
+		$toChange = [];
 
-		$toChange[] = '"-EXIF:ModifyDate=' . date_format( new DateTime(), 'Y:m:d G:i:s' ) . '"';
+		// TODO eww hardcoded UTC....
+		$toChange[] = '"-EXIF:ModifyDate=' . date_format( new DateTime( 'now', new DateTimeZone( 'UTC' ) ), 'Y:m:d G:i:s' ) . '"';
 
 		if ( array_key_exists( 'Taken', $details ) ) {
 			$toChange[] = '"-EXIF:DateTimeOriginal=' .
-				date_format( new DateTime( "@" . $details['Taken'] ), 'Y:m:d G:i:s' ) .
+				date_format( new DateTime( "@" . $details['Taken'], new DateTimeZone( 'UTC' ) ), 'Y:m:d G:i:s' ) .
 				'"';
 		} else {
 			continue;
