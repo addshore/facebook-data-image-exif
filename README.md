@@ -5,7 +5,7 @@ Thrown into git & github in 2018 and mashed together with Docker to make it easi
 
 This script will go through all photos in all albums and parse data from the relevant json file adding exif data where possible.
 
-No backup is created as part of this script, please make your own.
+No backup is created as part of this script, please make your own. You'll need to request a JSON backup of your photos from Facebook.
 
 ## Usage (with Docker & linux containers)
 
