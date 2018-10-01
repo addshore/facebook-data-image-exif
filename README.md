@@ -1,16 +1,17 @@
 # facebook-data-image-exif
 
-Originally created as part of https://addshore.com/2016/09/add-exif-data-back-to-facebook-images/
-Thrown into git & github in 2018 and mashed together with docker to make it easier....
-Also altered to work with the new facebook export format (not too thoroughly tested)....
+Originally created in 2016 for a blog post on how to [Add Exif data back to Facebook images](https://addshore.com/2016/09/add-exif-data-back-to-facebook-images/)
+Thrown into git & github in 2018 and mashed together with Docker to make it easier to run with dependencies. Modified to use the newly provided JSON format mandated by GDPR in 2018.
 
-This script will go through all photos in all albums and parse data from the relevant html file adding exif data where possible.
-It will rename the original photos using a _original suffix and the exif data will be added to copies in their old location.
+This script will go through all photos in all albums and parse data from the relevant json file adding exif data where possible.
+
+No backup is created as part of this script, please make your own. You'll need to request a JSON backup of your photos from Facebook.
 
 ## Usage (with Docker & linux containers)
 
- - Install docker
+ - Install [Docker](https://www.docker.com/community-edition#/download)
  - Clone this repo (or download this code)
+ - Open a terminal in the repo directory
  - Build and tag the image - `docker build -t facebook-data-image-exif .`
  - Run the script with the correct things passed in: `docker run --rm -it -v //path/to/facebook/export/photos/directory://input facebook-data-image-exif`
 
