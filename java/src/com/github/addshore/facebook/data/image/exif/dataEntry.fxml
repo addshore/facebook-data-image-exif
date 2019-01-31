@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.addshore.facebook.data.image.exif.Controller">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -30,6 +30,6 @@
       <Button mnemonicParsing="false" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="4" />
       <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
       <Label text="Path to exiftool script" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <Label text="0.1-rc1-(20190131-133500)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label text="0.1-rc1-(20190131-134000)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>

@@ -4,9 +4,9 @@
 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.addshore.facebook.data.image.exif</groupId>
+    <groupId>com.github.addshore.facebook.data.image.exif</groupId>
     <artifactId>facebook-data-image-exif</artifactId>
-    <version>0.1</version>
+    <version>0.1-rc1-(20190131-134000)</version>
 
     <repositories>
 

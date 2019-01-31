@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package sample;
+package com.github.addshore.facebook.data.image.exif;
 
 import com.thebuzzmedia.exiftool.Constants;
 import com.thebuzzmedia.exiftool.Tag;

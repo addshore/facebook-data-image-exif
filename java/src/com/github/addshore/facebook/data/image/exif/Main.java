@@ -1,4 +1,4 @@
-package sample;
+package com.github.addshore.facebook.data.image.exif;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
