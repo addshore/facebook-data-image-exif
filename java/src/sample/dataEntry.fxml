@@ -22,6 +22,7 @@
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
    </rowConstraints>
    <children>
       <Label text="Path to facebook export photos directory" GridPane.columnIndex="2" />
@@ -29,5 +30,6 @@
       <Button mnemonicParsing="false" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="4" />
       <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
       <Label text="Path to exiftool script" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Label text="0.1-rc1-(20190131-133500)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>
