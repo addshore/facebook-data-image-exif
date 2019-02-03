@@ -17,13 +17,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Main extends Application {
@@ -37,16 +40,43 @@ public class Main extends Application {
         // If Debug?
         //System.setProperty("exiftool.debug","True");
 
+        File exifTool = null;
+        try{
+            exifTool = this.getExifToolFromPath();
+        } catch ( FileNotFoundException ignored) {
+        }
+
         stage.setTitle("Facebook Data Image Exif");
-        this.showDataEntryScreen( stage );
+        this.showDataEntryScreen( stage, exifTool );
     }
 
-    private void showDataEntryScreen(final Stage stage) throws Exception {
+    private File getExifToolFromPath() throws FileNotFoundException {
+        for (String dirString: System.getenv("PATH").split(System.getProperty("path.separator"))) {
+            File dir = new File(dirString);
+            if ( dir.isDirectory() ) {
+                for ( File file: dir.listFiles() ) {
+                    String fileWithoutExt = FilenameUtils.removeExtension(file.getName());
+                    if (fileWithoutExt.equals("exiftool")) {
+                        return file;
+                    }
+                }
+            }
+        }
+        throw new FileNotFoundException();
+    }
+
+    private void showDataEntryScreen(final Stage stage, File exifTool) throws Exception {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(3);
         Button button = (Button) dataEntryView.getChildren().get(2);
+
+        // If we found the exiftool in PATH then preset it and lock the box
+        if ( exifTool != null ) {
+            toolInput.setText(exifTool.getAbsolutePath());
+            toolInput.setEditable(false);
+        }
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
             dirInput.setPromptText( "C:\\Users\\addshore\\downloads\\facebook-export\\photos" );
