@@ -220,7 +220,6 @@ public class Main extends Application {
                     }
                 }
 
-                //$imgLocation = $this->directory . str_replace('photos_and_videos', '', $photoData['uri']);
                 File imageFile = new File(dir.toPath().toString() + "/../" + photoData.getString("uri"));
 
                 textArea.getChildren().add(new Text(" * Processing: " + photoData.getString("uri") + "\n"));
