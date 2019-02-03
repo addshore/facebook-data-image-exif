@@ -44,10 +44,21 @@ public class Main extends Application {
         try{
             exifTool = this.getExifToolFromPath();
         } catch ( FileNotFoundException ignored) {
+            if( this.isWindows() ) {
+                // Get exiftool from the JAR if we are on windows
+                exifTool = JarredFile.getFileFromJar( "exiftool.exe" );
+            }
         }
 
         stage.setTitle("Facebook Data Image Exif");
-        this.showDataEntryScreen( stage, exifTool );
+        Scene dataEntryScene = this.getDataEntryScene( stage, exifTool );
+
+        stage.setScene( dataEntryScene );
+        stage.show();
+    }
+
+    private Boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
     private File getExifToolFromPath() throws FileNotFoundException {
@@ -65,7 +76,7 @@ public class Main extends Application {
         throw new FileNotFoundException();
     }
 
-    private void showDataEntryScreen(final Stage stage, File exifTool) throws Exception {
+    private Scene getDataEntryScene(final Stage stage, File exifTool) throws Exception {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
@@ -122,8 +133,7 @@ public class Main extends Application {
             }
         });
 
-        stage.setScene(new Scene(dataEntryView, 400, 200));
-        stage.show();
+        return new Scene(dataEntryView, 400, 200);
     }
 
     private void showProcessingScreen( Stage stage, File dir, File exiftoolFile ) throws Exception {
