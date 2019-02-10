@@ -6,4 +6,4 @@ It was [converted to Java in 2018](https://addshore.com/2019/02/add-exif-data-ba
 
 Pull requests are welcome!
 
-Instructions can be fonud [here](https://addshore.com/2019/02/add-exif-data-back-to-facebook-images-0-1/)
+Instructions can be found [here](https://addshore.com/2019/02/add-exif-data-back-to-facebook-images-0-1/)
