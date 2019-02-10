@@ -68,13 +68,20 @@ public class Main extends Application {
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(3);
-        final Hyperlink hyperLink = (Hyperlink) dataEntryView.getChildren().get(6);
+        final Hyperlink hyperLinkAddshore = (Hyperlink) dataEntryView.getChildren().get(6);
+        final Hyperlink hyperLinkExif = (Hyperlink) dataEntryView.getChildren().get(7);
         Button button = (Button) dataEntryView.getChildren().get(2);
 
-        hyperLink.setOnAction(new EventHandler<ActionEvent>() {
+        hyperLinkAddshore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 getHostServices().showDocument("https://addshore.com/redirects/exiftool/writtenbylink");
+            }
+        });
+        hyperLinkExif.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                getHostServices().showDocument("https://sno.phy.queensu.ca/~phil/exiftool/");
             }
         });
 
