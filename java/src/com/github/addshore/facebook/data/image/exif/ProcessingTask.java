@@ -161,8 +161,6 @@ public class ProcessingTask extends Task {
                     exifData.put( CustomTag.FNUMBER, fStop );
                 }
 
-                exifData.put( StandardTag.COMMENT, "EXIF data converted from facebook dump using https://github.com/addshore/facebook-data-image-exif" );
-
                 exifTool.setImageMeta( imageFile, exifData );
 
             }
