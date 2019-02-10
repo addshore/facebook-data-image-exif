@@ -1,17 +1,14 @@
 package com.github.addshore.facebook.data.image.exif;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 
@@ -115,12 +112,18 @@ public class Main extends Application {
                 }
 
                 try {
+                    final TextArea textArea = new TextArea();
 
-                    // Overwrite the old output with the new, and start the task
-                    TextFlow textArea = new TextFlow();
-                    textArea.getChildren().add( new Text( "Processing... " ) );
+                    textArea.textProperty().addListener(new ChangeListener<Object>() {
+                        @Override
+                        public void changed(ObservableValue<?> observable, Object oldValue,
+                                            Object newValue) {
+                            textArea.setScrollTop(Double.MAX_VALUE); //this will scroll to the bottom
+                            //use Double.MIN_VALUE to scroll to the top
+                        }
+                    });
 
-                    stage.setScene(new Scene(textArea, 800, 800));
+                    stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();
 
                     ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile );

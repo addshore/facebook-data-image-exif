@@ -30,6 +30,6 @@
       <Button mnemonicParsing="false" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="4" />
       <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
       <Label text="Path to exiftool script" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <Label text="0.1-rc4-(20190210-095600)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label text="0.1-rc5-(20190210-101100)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>

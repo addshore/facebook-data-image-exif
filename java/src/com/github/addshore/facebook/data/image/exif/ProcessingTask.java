@@ -6,8 +6,7 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.control.TextArea;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,12 +19,12 @@ import java.util.Map;
 
 public class ProcessingTask extends Task {
 
-    private TextFlow textArea;
+    private TextArea textArea;
     private File dir;
     private File exiftoolFile;
     private String stateMessage;
 
-    ProcessingTask(TextFlow textArea, File dir, File exiftoolFile){
+    ProcessingTask(TextArea textArea, File dir, File exiftoolFile){
         this.textArea = textArea;
         this.dir = dir;
         this.exiftoolFile = exiftoolFile;
@@ -43,7 +42,10 @@ public class ProcessingTask extends Task {
             @Override
             public void run() {
                 updateMessage( stateMessage );
-                textArea.getChildren().set(0, new Text(stateMessage));
+                textArea.setText(stateMessage);
+                // Trigger the listener that makes the field scrollable?
+                // https://stackoverflow.com/questions/17799160/javafx-textarea-and-autoscroll
+                textArea.appendText("");
             }
         };
 
