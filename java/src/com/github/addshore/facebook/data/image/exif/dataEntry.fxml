@@ -32,7 +32,7 @@
       <Button mnemonicParsing="false" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="TOP" />
       <TextField GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="TOP" />
       <Label text="Path to exiftool script" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Label text="0.1-rc6-(20190210-102800)" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+      <Label text="Version: 0.1" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="TOP" />
       <Hyperlink text="Written by Addshore" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.valignment="TOP" />
    </children>
 </GridPane>
