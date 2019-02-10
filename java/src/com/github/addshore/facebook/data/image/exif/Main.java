@@ -74,7 +74,7 @@ public class Main extends Application {
         hyperLink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                getHostServices().showDocument("https://addshore.com");
+                getHostServices().showDocument("https://addshore.com/redirects/exiftool/writtenbylink");
             }
         });
 
