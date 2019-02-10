@@ -83,7 +83,7 @@ public class ProcessingTask extends Task {
                 continue;
             }
 
-            appendMessage("=== Album " + albumJson.getString("name") + " ===");
+            appendMessage("=== " + albumJson.getString("name") + " ===");
 
             // Process the photos in the album
             JSONArray albumPhotos = albumJson.getJSONArray("photos");

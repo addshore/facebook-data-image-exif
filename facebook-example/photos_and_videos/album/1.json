@@ -1,0 +1,67 @@
+{
+  "name": "Album 1 JSON",
+  "photos": [
+    {
+      "uri": "photos_and_videos/second_album/a.jpg",
+      "creation_timestamp": 1437454657,
+      "media_metadata": {
+        "photo_metadata": {
+          "camera_make": "Huawei",
+          "camera_model": "Nexus 6P",
+          "modified_timestamp": 1510429759,
+          "exposure": "166/10000",
+          "focal_length": "4670/1000",
+          "f_stop": "20000/10000",
+          "iso_speed": 138,
+          "latitude": 29.925027777778,
+          "longitude": -90.088072222222,
+          "orientation": 0,
+          "original_width": 2412,
+          "original_height": 0,
+          "upload_ip": "167.161.108.51"
+        }
+      }
+    },
+    {
+      "uri": "photos_and_videos/second_album/b.jpg",
+      "creation_timestamp": 1437454647,
+      "media_metadata": {
+        "photo_metadata": {
+          "camera_make": "NIKON CORPORATION",
+          "camera_model": "NIKON D40X",
+          "taken_timestamp": 1437148158,
+          "modified_timestamp": 1437454600,
+          "exposure": "1/30",
+          "focal_length": "400/10",
+          "f_stop": "5/1",
+          "iso_speed": 1000,
+          "orientation": 0,
+          "original_width": 0,
+          "original_height": 0,
+          "upload_ip": "167.161.108.51"
+        }
+      }
+    }
+  ],
+  "cover_photo": {
+    "uri": "photos_and_videos/myalbum_1234/11113237987292.jpg",
+    "creation_timestamp": 1437454658,
+    "media_metadata": {
+      "photo_metadata": {
+        "camera_make": "HTC",
+        "camera_model": "HTC One_M8",
+        "taken_timestamp": 1437193521,
+        "modified_timestamp": 1437454617,
+        "exposure": "1/30",
+        "focal_length": "3820/1000",
+        "f_stop": "2/1",
+        "iso_speed": 250,
+        "orientation": 0,
+        "original_width": 0,
+        "original_height": 0,
+        "upload_ip": "167.161.108.51"
+      }
+    }
+  },
+  "last_modified_timestamp": 1523468293
+}
