@@ -37,7 +37,7 @@ public class Main extends Application {
             }
         }
 
-        stage.setTitle("Facebook Data Image Exif");
+        stage.setTitle("Facebook Data Image Exif Tool");
         Scene dataEntryScene = this.getDataEntryScene( stage, exifTool );
 
         stage.setScene( dataEntryScene );
@@ -68,7 +68,15 @@ public class Main extends Application {
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(3);
+        final Hyperlink hyperLink = (Hyperlink) dataEntryView.getChildren().get(6);
         Button button = (Button) dataEntryView.getChildren().get(2);
+
+        hyperLink.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                getHostServices().showDocument("https://addshore.com");
+            }
+        });
 
         // If we found the exiftool in PATH then preset it and lock the box
         if ( exifTool != null ) {
@@ -77,9 +85,9 @@ public class Main extends Application {
         }
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
-            dirInput.setPromptText( "C:\\Users\\addshore\\downloads\\facebook-export\\photos" );
+            dirInput.setPromptText( "C:\\Users\\addshore\\downloads\\facebook-export\\photos_and_videos" );
         } else {
-            dirInput.setPromptText("/path/to/facebook/export/photos/directory");
+            dirInput.setPromptText("/path/to/facebook/export/photos_and_videos/directory");
         }
 
         button.setOnAction(new EventHandler<ActionEvent>(){
@@ -139,7 +147,7 @@ public class Main extends Application {
             }
         });
 
-        return new Scene(dataEntryView, 400, 200);
+        return new Scene(dataEntryView, 400, 250);
     }
 
 }
