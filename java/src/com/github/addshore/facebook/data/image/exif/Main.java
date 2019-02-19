@@ -159,7 +159,9 @@ public class Main extends Application {
                     stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();
 
-                    String initialStateMessage = "Version: " + this.version;
+                    String initialStateMessage = "Version: " + version + "\n" +
+                            "OS: " + System.getProperty("os.name") + "\n" +
+                            "-------------------------------------------------";
 
                     ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile, initialStateMessage );
                     Thread th = new Thread(task);
