@@ -11,12 +11,19 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 
 public class Main extends Application {
+
+    private String version;
 
     public static void main(String[] args) {
         launch(args);
@@ -37,11 +44,19 @@ public class Main extends Application {
             }
         }
 
+        this.setMainVersionFromPom();
+
         stage.setTitle("Facebook Data Image Exif Tool");
         Scene dataEntryScene = this.getDataEntryScene( stage, exifTool );
 
         stage.setScene( dataEntryScene );
         stage.show();
+    }
+
+    private void setMainVersionFromPom() throws IOException, XmlPullParserException {
+        MavenXpp3Reader reader = new MavenXpp3Reader();
+        Model model = reader.read(new FileReader("pom.xml"));
+        this.version = model.getVersion();
     }
 
     private Boolean isWindows() {
@@ -68,9 +83,12 @@ public class Main extends Application {
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(3);
+        final Label versionLabel = (Label) dataEntryView.getChildren().get(5);
         final Hyperlink hyperLinkAddshore = (Hyperlink) dataEntryView.getChildren().get(6);
         final Hyperlink hyperLinkExif = (Hyperlink) dataEntryView.getChildren().get(7);
         Button button = (Button) dataEntryView.getChildren().get(2);
+
+        versionLabel.setText("Version: " + this.version);
 
         hyperLinkAddshore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -141,7 +159,9 @@ public class Main extends Application {
                     stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();
 
-                    ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile );
+                    String initialStateMessage = "Version: " + this.version;
+
+                    ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile, initialStateMessage );
                     Thread th = new Thread(task);
                     th.setDaemon(false);
                     System.out.println("Main: pre thread start");

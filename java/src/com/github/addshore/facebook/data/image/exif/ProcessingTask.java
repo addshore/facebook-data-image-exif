@@ -24,11 +24,11 @@ public class ProcessingTask extends Task {
     private File exiftoolFile;
     private String stateMessage;
 
-    ProcessingTask(TextArea textArea, File dir, File exiftoolFile){
+    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage){
         this.textArea = textArea;
         this.dir = dir;
         this.exiftoolFile = exiftoolFile;
-        this.stateMessage = "Task started!";
+        this.stateMessage = initialStateMessage;
     }
 
     private void appendMessage( String string ) {
