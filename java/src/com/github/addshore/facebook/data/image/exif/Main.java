@@ -1,6 +1,7 @@
 package com.github.addshore.facebook.data.image.exif;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -19,11 +20,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
 
 
 public class Main extends Application {
 
     private String version;
+    private File existingExifTool;
 
     public static void main(String[] args) {
         launch(args);
@@ -34,20 +38,11 @@ public class Main extends Application {
         // If Debug?
         //System.setProperty("exiftool.debug","True");
 
-        File exifTool = null;
-        try{
-            exifTool = this.getExifToolFromPath();
-        } catch ( FileNotFoundException ignored) {
-            if( this.isWindows() ) {
-                // Get exiftool from the JAR if we are on windows
-                exifTool = JarredFile.getFileFromJar( "exiftool.exe" );
-            }
-        }
-
         this.setMainVersionFromPom();
+        this.setExistingExifToolFile();
 
         stage.setTitle("Facebook Data Image Exif Tool");
-        Scene dataEntryScene = this.getDataEntryScene( stage, exifTool );
+        Scene dataEntryScene = this.getDataEntryScene( stage );
 
         stage.setScene( dataEntryScene );
         stage.show();
@@ -57,6 +52,28 @@ public class Main extends Application {
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader("pom.xml"));
         this.version = model.getVersion();
+    }
+
+    private void setExistingExifToolFile() {
+        // Try to return an exiftool from the path
+        try{
+            this.existingExifTool = this.getExifToolFromPath();
+        } catch ( FileNotFoundException ignored) {}
+
+        // Get exiftool from the JAR if we are on windows and it is packaged
+        if( this.isWindows() ) {
+            try {
+                this.existingExifTool = JarredFile.getFileFromJar( "exiftool.exe" );
+            } catch (URISyntaxException | IOException e) {
+                showErrorThenClose("Packaged exiftool.exe issue :\n\n" + Arrays.toString(e.getStackTrace()));
+            }
+        }
+    }
+
+    private void showErrorThenClose( String message ) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.showAndWait();
+        Platform.exit();
     }
 
     private Boolean isWindows() {
@@ -78,7 +95,7 @@ public class Main extends Application {
         throw new FileNotFoundException();
     }
 
-    private Scene getDataEntryScene(final Stage stage, File exifTool) throws Exception {
+    private Scene getDataEntryScene(final Stage stage) throws Exception {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
@@ -104,8 +121,8 @@ public class Main extends Application {
         });
 
         // If we found the exiftool in PATH then preset it and lock the box
-        if ( exifTool != null ) {
-            toolInput.setText(exifTool.getAbsolutePath());
+        if ( this.existingExifTool != null ) {
+            toolInput.setText(this.existingExifTool.getAbsolutePath());
             toolInput.setEditable(false);
         }
 
