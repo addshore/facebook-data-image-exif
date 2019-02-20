@@ -59,7 +59,9 @@ public class Main extends Application {
         if( this.isWindows() ) {
             try {
                 this.existingExifTool = JarredFile.getFileFromJar( "exiftool.exe" );
-            } catch (URISyntaxException | IOException e) {
+            }
+            catch(FileNotFoundException ignored){}
+            catch (URISyntaxException | IOException e) {
                 showErrorThenClose("Packaged exiftool.exe issue :\n\n" + Arrays.toString(e.getStackTrace()));
             }
         }
