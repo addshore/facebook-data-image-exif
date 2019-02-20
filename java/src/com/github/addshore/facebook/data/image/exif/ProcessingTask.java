@@ -24,13 +24,15 @@ public class ProcessingTask extends Task {
     private File exiftoolFile;
     private String stateMessage;
     private Boolean debugOutput;
+    private Boolean dryRun;
 
-    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage, Boolean debugOutput){
+    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
         this.textArea = textArea;
         this.dir = dir;
         this.exiftoolFile = exiftoolFile;
         this.stateMessage = initialStateMessage;
         this.debugOutput = debugOutput;
+        this.dryRun = dryRun;
     }
 
     private void appendMessage( String string ) {
@@ -174,8 +176,10 @@ public class ProcessingTask extends Task {
                     exifData.put( CustomTag.FNUMBER, fStop );
                 }
 
-                appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
-                exifTool.setImageMeta( imageFile, exifData );
+                if(!this.dryRun){
+                    appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
+                    exifTool.setImageMeta( imageFile, exifData );
+                }
 
             }
         }
