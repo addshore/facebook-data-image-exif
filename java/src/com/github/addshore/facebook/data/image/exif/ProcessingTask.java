@@ -89,6 +89,7 @@ public class ProcessingTask extends Task {
             JSONArray albumPhotos = albumJson.getJSONArray("photos");
             for (int i = 0; i < albumPhotos.length(); i++) {
                 JSONObject photoData = albumPhotos.getJSONObject(i);
+                appendMessage(" - Processing " + photoData.getString("uri"));
                 JSONObject photoMetaData = photoData.getJSONObject("media_metadata").getJSONObject("photo_metadata");
 
                 // Figure out the time the picture was taken
@@ -124,8 +125,6 @@ public class ProcessingTask extends Task {
                 }
 
                 File imageFile = new File(dir.toPath().toString() + "/../" + photoData.getString("uri"));
-
-                appendMessage(" * Processing: " + photoData.getString("uri"));
 
                 Map<Tag, String> exifData = new HashMap<Tag, String>();
 
