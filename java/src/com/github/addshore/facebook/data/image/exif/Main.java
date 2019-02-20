@@ -204,6 +204,8 @@ public class Main extends Application {
 
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
+                            "Debug: " + debugCheckbox.isSelected() + "\n" +
+                            "Dry run: " + dryRunCheckbox.isSelected() + "\n" +
                             "-------------------------------------------------";
 
                     ProcessingTask task = new ProcessingTask(

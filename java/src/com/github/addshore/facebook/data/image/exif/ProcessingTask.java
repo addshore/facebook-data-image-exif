@@ -100,7 +100,7 @@ public class ProcessingTask extends Task {
 
             JSONArray albumPhotos = albumJson.getJSONArray("photos");
 
-            appendMessage("Album: " + albumJson.getString("name") + ", photocount = " + albumPhotos.length());
+            appendMessage("Album: " + albumJson.getString("name") + ", " + albumPhotos.length() + " photos");
 
             // Process the photos in the album
             for (int i = 0; i < albumPhotos.length(); i++) {
