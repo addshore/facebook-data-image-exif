@@ -48,10 +48,31 @@ public class Main extends Application {
         stage.show();
     }
 
+    private File getPomFile() {
+        File file =  new File("pom.xml");
+        if( file.exists() ) {
+            return file;
+        }
+
+        try {
+            return JarredFile.getFileFromJar("pom.xml");
+        } catch ( URISyntaxException | IOException e ) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private void setMainVersionFromPom() throws IOException, XmlPullParserException {
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        Model model = reader.read(new FileReader("pom.xml"));
-        this.version = model.getVersion();
+        File pom = getPomFile();
+        if(pom != null) {
+            MavenXpp3Reader reader = new MavenXpp3Reader();
+            Model model = reader.read(new FileReader(pom));
+            this.version = model.getVersion();
+        } else {
+            this.version = "unknown";
+        }
+
     }
 
     private void setExistingExifToolFile() {
