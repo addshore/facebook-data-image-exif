@@ -103,6 +103,7 @@ public class Main extends Application {
         final Label versionLabel = (Label) dataEntryView.getChildren().get(5);
         final Hyperlink hyperLinkAddshore = (Hyperlink) dataEntryView.getChildren().get(6);
         final Hyperlink hyperLinkExif = (Hyperlink) dataEntryView.getChildren().get(7);
+        final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(8);
         Button button = (Button) dataEntryView.getChildren().get(2);
 
         versionLabel.setText("Version: " + this.version);
@@ -180,7 +181,7 @@ public class Main extends Application {
                             "OS: " + System.getProperty("os.name") + "\n" +
                             "-------------------------------------------------";
 
-                    ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile, initialStateMessage );
+                    ProcessingTask task = new ProcessingTask( textArea, dirFile, exiftoolFile, initialStateMessage, debugCheckbox.isSelected() );
                     Thread th = new Thread(task);
                     th.setDaemon(false);
                     System.out.println("Main: pre thread start");
@@ -193,7 +194,7 @@ public class Main extends Application {
             }
         });
 
-        return new Scene(dataEntryView, 400, 250);
+        return new Scene(dataEntryView, 400, 300);
     }
 
 }

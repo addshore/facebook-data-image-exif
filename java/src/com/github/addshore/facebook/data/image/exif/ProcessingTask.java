@@ -23,18 +23,29 @@ public class ProcessingTask extends Task {
     private File dir;
     private File exiftoolFile;
     private String stateMessage;
+    private Boolean debugOutput;
 
-    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage){
+    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage, Boolean debugOutput){
         this.textArea = textArea;
         this.dir = dir;
         this.exiftoolFile = exiftoolFile;
         this.stateMessage = initialStateMessage;
+        this.debugOutput = debugOutput;
     }
 
     private void appendMessage( String string ) {
         System.out.println("ProcessingTask: " + string);
         stateMessage = stateMessage + "\n" + string;
         updateUI();
+    }
+
+    private void appendDebugMessage( String string ) {
+        string = "debug: " + string;
+        if ( this.debugOutput ) {
+            this.appendMessage(  string );
+        } else {
+            System.out.println("ProcessingTask: " + string);
+        }
     }
 
     private void updateUI() {
@@ -56,8 +67,9 @@ public class ProcessingTask extends Task {
     @Override
     protected Object call() throws Exception {
         // Find all album json files
-        appendMessage( "Looking for albums... " );
+        appendMessage( "Looking for albums..." );
         File albumDir = new File( dir.toPath().toString() + "\\album" );
+        appendDebugMessage("In album dir: " + albumDir.getPath());
 
         File[] albumJsonFiles = albumDir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String filename)
@@ -80,13 +92,15 @@ public class ProcessingTask extends Task {
             String jsonTxt = writer.toString();
             JSONObject albumJson = new JSONObject(jsonTxt);
             if (!albumJson.has("photos")) {
+                appendDebugMessage("Album has no photos");
                 continue;
             }
 
-            appendMessage("=== " + albumJson.getString("name") + " ===");
+            JSONArray albumPhotos = albumJson.getJSONArray("photos");
+
+            appendMessage("Album: " + albumJson.getString("name") + ", photocount = " + albumPhotos.length());
 
             // Process the photos in the album
-            JSONArray albumPhotos = albumJson.getJSONArray("photos");
             for (int i = 0; i < albumPhotos.length(); i++) {
                 JSONObject photoData = albumPhotos.getJSONObject(i);
                 appendMessage(" - Processing " + photoData.getString("uri"));
@@ -160,12 +174,13 @@ public class ProcessingTask extends Task {
                     exifData.put( CustomTag.FNUMBER, fStop );
                 }
 
+                appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
                 exifTool.setImageMeta( imageFile, exifData );
 
             }
         }
 
-        appendMessage(" Done!!");
+        appendMessage("Done!!");
 
         exifTool.close();
 
