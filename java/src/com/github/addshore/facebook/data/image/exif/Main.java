@@ -55,11 +55,6 @@ public class Main extends Application {
     }
 
     private void setExistingExifToolFile() {
-        // Try to return an exiftool from the path
-        try{
-            this.existingExifTool = this.getExifToolFromPath();
-        } catch ( FileNotFoundException ignored) {}
-
         // Get exiftool from the JAR if we are on windows and it is packaged
         if( this.isWindows() ) {
             try {
@@ -68,6 +63,11 @@ public class Main extends Application {
                 showErrorThenClose("Packaged exiftool.exe issue :\n\n" + Arrays.toString(e.getStackTrace()));
             }
         }
+
+        // Try to return an exiftool from the path
+        try{
+            this.existingExifTool = this.getExifToolFromPath();
+        } catch ( FileNotFoundException ignored) {}
     }
 
     private void showErrorThenClose( String message ) {
