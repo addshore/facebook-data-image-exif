@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class Main extends Application {
@@ -107,7 +108,7 @@ public class Main extends Application {
         for (String dirString: System.getenv("PATH").split(System.getProperty("path.separator"))) {
             File dir = new File(dirString);
             if ( dir.isDirectory() ) {
-                for ( File file: dir.listFiles() ) {
+                for ( File file: Objects.requireNonNull(dir.listFiles())) {
                     String fileWithoutExt = FilenameUtils.removeExtension(file.getName());
                     if (fileWithoutExt.equals("exiftool")) {
                         return file;
