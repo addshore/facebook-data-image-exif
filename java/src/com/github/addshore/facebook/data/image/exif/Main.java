@@ -26,6 +26,10 @@ import java.util.Objects;
 public class Main extends Application {
 
     private String version;
+    private TextField toolInput;
+    private TextField dirInput;
+    private CheckBox debugCheckbox;
+    private Stage stage;
 
     public static void main(String[] args) {
         launch(args);
@@ -37,6 +41,7 @@ public class Main extends Application {
         //System.setProperty("exiftool.debug","True");
 
         this.setMainVersionFromPom();
+        this.stage = stage;
 
         stage.setTitle("Facebook Data Image Exif Tool");
         Scene dataEntryScene = this.getDataEntryScene( stage );
@@ -90,19 +95,21 @@ public class Main extends Application {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
         // Get element objects from the UI
-        Button button = (Button) dataEntryView.getChildren().get(0);
-        final TextField dirInput = (TextField) dataEntryView.getChildren().get(2);
-        final Label toolLabel = (Label) dataEntryView.getChildren().get(3);
-        final TextField toolInput = (TextField) dataEntryView.getChildren().get(4);
-
-        final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(5);
-        final CheckBox dryRunCheckbox = (CheckBox) dataEntryView.getChildren().get(6);
+        dirInput = (TextField) dataEntryView.getChildren().get(1);
+        final Label toolLabel = (Label) dataEntryView.getChildren().get(2);
+        toolInput = (TextField) dataEntryView.getChildren().get(3);
 
         // Details grid pain
-        final GridPane linkGridPain = (GridPane) dataEntryView.getChildren().get(7);
-        final Label versionLabel = (Label) linkGridPain.getChildren().get(0);
-        final Hyperlink hyperLinkAddshore = (Hyperlink) linkGridPain.getChildren().get(1);
-        final Hyperlink hyperLinkExif = (Hyperlink) linkGridPain.getChildren().get(2);
+        final GridPane linksGrid = (GridPane) dataEntryView.getChildren().get(4);
+        final Label versionLabel = (Label) linksGrid.getChildren().get(0);
+        final Hyperlink hyperLinkAddshore = (Hyperlink) linksGrid.getChildren().get(1);
+        final Hyperlink hyperLinkExif = (Hyperlink) linksGrid.getChildren().get(2);
+
+        // Submission grid
+        final GridPane submitGrid = (GridPane) dataEntryView.getChildren().get(6);
+        Button runButton = (Button) submitGrid.getChildren().get(0);
+        Button dryRunButton = (Button) submitGrid.getChildren().get(1);
+        debugCheckbox = (CheckBox) submitGrid.getChildren().get(2);
 
         versionLabel.setText("Version: " + this.version);
 
@@ -139,7 +146,14 @@ public class Main extends Application {
             toolLabel.setText(toolLabel.getText() + " (downloadable below)");
         }
 
-        button.setOnAction(new EventHandler<ActionEvent>(){
+        runButton.setOnAction(this.getButtonClickEventHandler(false));
+        dryRunButton.setOnAction(this.getButtonClickEventHandler(true));
+
+        return new Scene(dataEntryView, 400, 300);
+    }
+
+    private EventHandler<ActionEvent> getButtonClickEventHandler( Boolean dryRun ) {
+        return new EventHandler<ActionEvent>(){
 
             @Override
             public void handle(ActionEvent t){
@@ -186,7 +200,7 @@ public class Main extends Application {
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
                             "Debug: " + debugCheckbox.isSelected() + "\n" +
-                            "Dry run: " + dryRunCheckbox.isSelected() + "\n" +
+                            "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
 
                     ProcessingTask task = new ProcessingTask(
@@ -195,7 +209,7 @@ public class Main extends Application {
                             exiftoolFile,
                             initialStateMessage,
                             debugCheckbox.isSelected(),
-                            dryRunCheckbox.isSelected()
+                            dryRun
                     );
                     Thread th = new Thread(task);
                     th.setDaemon(false);
@@ -207,9 +221,7 @@ public class Main extends Application {
                     e.printStackTrace();
                 }
             }
-        });
-
-        return new Scene(dataEntryView, 400, 350);
+        };
     }
 
 }
