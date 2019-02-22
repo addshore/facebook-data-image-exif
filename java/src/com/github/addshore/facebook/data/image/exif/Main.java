@@ -11,21 +11,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
 
 public class Main extends Application {
 
-    private String version;
+    private String version = "0.4";
     private TextField toolInput;
     private TextField dirInput;
     private CheckBox debugCheckbox;
@@ -40,7 +34,6 @@ public class Main extends Application {
         // If Debug?
         //System.setProperty("exiftool.debug","True");
 
-        this.setMainVersionFromPom();
         this.stage = stage;
 
         stage.setTitle("Facebook Data Image Exif Tool");
@@ -48,32 +41,6 @@ public class Main extends Application {
 
         stage.setScene( dataEntryScene );
         stage.show();
-    }
-
-    private File getPomFile() {
-        File file =  new File("pom.xml");
-        if( file.exists() ) {
-            return file;
-        }
-
-        try {
-            return JarredFile.getFileFromJar("pom.xml");
-        } catch ( URISyntaxException | IOException e ) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void setMainVersionFromPom() throws IOException, XmlPullParserException {
-        File pom = getPomFile();
-        if(pom != null) {
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            Model model = reader.read(new FileReader(pom));
-            this.version = model.getVersion();
-        } else {
-            this.version = "unknown";
-        }
     }
 
     private File getExifToolFromPath() throws FileNotFoundException {
