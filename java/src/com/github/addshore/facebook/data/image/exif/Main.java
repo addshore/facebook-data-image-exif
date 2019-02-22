@@ -149,7 +149,6 @@ public class Main extends Application {
         // If we found the exiftool in PATH then preset it and lock the box
         if ( this.existingExifTool != null ) {
             toolInput.setText(this.existingExifTool.getAbsolutePath());
-            toolInput.setEditable(false);
         }
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
