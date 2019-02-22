@@ -77,12 +77,14 @@ public class Main extends Application {
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(2);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(4);
 
-        final Label versionLabel = (Label) dataEntryView.getChildren().get(5);
-        final Hyperlink hyperLinkAddshore = (Hyperlink) dataEntryView.getChildren().get(6);
-        final Hyperlink hyperLinkExif = (Hyperlink) dataEntryView.getChildren().get(7);
+        final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(5);
+        final CheckBox dryRunCheckbox = (CheckBox) dataEntryView.getChildren().get(6);
 
-        final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(8);
-        final CheckBox dryRunCheckbox = (CheckBox) dataEntryView.getChildren().get(9);
+        // Details grid pain
+        final GridPane linkGridPain = (GridPane) dataEntryView.getChildren().get(7);
+        final Label versionLabel = (Label) linkGridPain.getChildren().get(0);
+        final Hyperlink hyperLinkAddshore = (Hyperlink) linkGridPain.getChildren().get(1);
+        final Hyperlink hyperLinkExif = (Hyperlink) linkGridPain.getChildren().get(2);
 
         versionLabel.setText("Version: " + this.version);
 
@@ -175,7 +177,7 @@ public class Main extends Application {
             }
         });
 
-        return new Scene(dataEntryView, 400, 330);
+        return new Scene(dataEntryView, 400, 280);
     }
 
 }
