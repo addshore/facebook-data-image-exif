@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.addshore.facebook.data.image.exif.Controller">
+<GridPane alignment="center" hgap="10" style="-fx-background-color: white;" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.addshore.facebook.data.image.exif.Controller">
    <columnConstraints>
+      <ColumnConstraints />
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
@@ -21,20 +22,36 @@
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
-      <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="18.0" />
+      <RowConstraints />
+      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" text="Run" GridPane.rowIndex="7" GridPane.valignment="TOP" />
-      <Label text="Path to facebook export photos_and_videos directory" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-      <TextField GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Label text="Path to exiftool program" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-      <TextField GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-      <CheckBox mnemonicParsing="false" text="Debug (extra output for debugging)" GridPane.rowIndex="6" GridPane.valignment="TOP" />
-      <CheckBox mnemonicParsing="false" text="Dry run (will not save files)" GridPane.rowIndex="5" GridPane.valignment="TOP" />
-      <GridPane GridPane.rowIndex="8">
+      <JFXButton mnemonicParsing="false" ripplerFill="#4059a9" style="-fx-background-color: #d8dfea;" text="Run" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+      <Label text="Path to facebook export photos_and_videos directory" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <JFXTextField style="-fx-background-color: #d8dfea;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></JFXTextField>
+      <Label text="Path to exiftool program" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <JFXTextField style="-fx-background-color: #d8dfea;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></JFXTextField>
+      <JFXCheckBox checkedColor="#6d84b4" mnemonicParsing="false" text="Debug (extra output for debugging)" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></JFXCheckBox>
+      <JFXCheckBox checkedColor="#6d84b4" mnemonicParsing="false" text="Dry run (will not save files)" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding></JFXCheckBox>
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="9">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -53,7 +70,7 @@
             <Hyperlink prefHeight="6.0" prefWidth="127.0" text="exiftool by Phil Harvey" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
          </children>
       </GridPane>
-      <Label layoutX="20.0" layoutY="122.0" text="Note: This program currently only works for JSON downloads" underline="true">
+      <Label layoutX="20.0" layoutY="122.0" text="Note: This program currently only works for JSON downloads" underline="true" GridPane.columnIndex="1" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

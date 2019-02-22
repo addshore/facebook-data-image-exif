@@ -209,7 +209,7 @@ public class Main extends Application {
             }
         });
 
-        return new Scene(dataEntryView, 400, 280);
+        return new Scene(dataEntryView, 400, 350);
     }
 
 }
