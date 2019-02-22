@@ -77,8 +77,19 @@ public class ProcessingTask extends Task {
             public boolean accept(File dir, String filename)
             { return filename.endsWith(".json"); }
         } );
+        File[] albumHtmlFiles = albumDir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String filename)
+            { return filename.endsWith(".html"); }
+        } );
 
-        appendMessage(albumJsonFiles.length + " albums found!");
+        appendMessage(albumJsonFiles.length + " JSON album files found");
+        appendMessage(albumHtmlFiles.length + " HTML album files found");
+
+        // Stop if we detected no JSON but did find HTML
+        if( albumJsonFiles.length == 0 && albumHtmlFiles.length != 0 ) {
+            appendMessage("This program currently only works with the JSON facebook downloads");
+            return null;
+        }
 
         ExifToolBuilder builder = new ExifToolBuilder();
         builder.withPath( exiftoolFile );
