@@ -107,6 +107,12 @@ public class Main extends Application {
             dirInput.setPromptText("/path/to/facebook/export/photos_and_videos/directory");
         }
 
+        if( System.getProperty("os.name").toLowerCase().contains("windows") ){
+            toolInput.setPromptText( "C:\\Users\\addshore\\downloads\\exiftool.exe" );
+        } else {
+            toolInput.setPromptText("/usr/bin/exiftool");
+        }
+
         button.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
