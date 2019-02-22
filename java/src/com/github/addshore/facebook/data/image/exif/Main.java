@@ -94,13 +94,13 @@ public class Main extends Application {
         });
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
-            dirInput.setPromptText( "C:\\Users\\addshore\\downloads\\facebook-export\\photos_and_videos" );
+            dirInput.setPromptText( "C:\\Users\\example\\downloads\\facebook-export\\photos_and_videos" );
         } else {
             dirInput.setPromptText("/path/to/facebook/export/photos_and_videos/directory");
         }
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
-            toolInput.setPromptText( "C:\\Users\\addshore\\downloads\\exiftool.exe" );
+            toolInput.setPromptText( "C:\\Users\\example\\downloads\\exiftool.exe" );
         } else {
             toolInput.setPromptText("/usr/bin/exiftool");
         }
