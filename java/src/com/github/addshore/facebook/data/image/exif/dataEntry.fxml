@@ -30,7 +30,7 @@
       <Button mnemonicParsing="false" text="Run" GridPane.rowIndex="7" GridPane.valignment="TOP" />
       <Label text="Path to facebook export photos_and_videos directory" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
       <TextField GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Label text="Path to exiftool program (downloadable below)" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Label text="Path to exiftool program" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
       <TextField GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="TOP" />
       <CheckBox mnemonicParsing="false" text="Debug (extra output for debugging)" GridPane.rowIndex="6" GridPane.valignment="TOP" />
       <CheckBox mnemonicParsing="false" text="Dry run (will not save files)" GridPane.rowIndex="5" GridPane.valignment="TOP" />

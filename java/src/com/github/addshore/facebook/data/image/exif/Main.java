@@ -10,14 +10,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 
 public class Main extends Application {
@@ -66,7 +69,21 @@ public class Main extends Application {
         } else {
             this.version = "unknown";
         }
+    }
 
+    private File getExifToolFromPath() throws FileNotFoundException {
+        for (String dirString: System.getenv("PATH").split(System.getProperty("path.separator"))) {
+            File dir = new File(dirString);
+            if ( dir.isDirectory() ) {
+                for ( File file: Objects.requireNonNull(dir.listFiles())) {
+                    String fileWithoutExt = FilenameUtils.removeExtension(file.getName());
+                    if (fileWithoutExt.equals("exiftool")) {
+                        return file;
+                    }
+                }
+            }
+        }
+        throw new FileNotFoundException();
     }
 
     private Scene getDataEntryScene(final Stage stage) throws Exception {
@@ -75,6 +92,7 @@ public class Main extends Application {
         // Get element objects from the UI
         Button button = (Button) dataEntryView.getChildren().get(0);
         final TextField dirInput = (TextField) dataEntryView.getChildren().get(2);
+        final Label toolLabel = (Label) dataEntryView.getChildren().get(3);
         final TextField toolInput = (TextField) dataEntryView.getChildren().get(4);
 
         final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(5);
@@ -111,6 +129,14 @@ public class Main extends Application {
             toolInput.setPromptText( "C:\\Users\\addshore\\downloads\\exiftool.exe" );
         } else {
             toolInput.setPromptText("/usr/bin/exiftool");
+        }
+
+        try {
+            final File exifToolFromPath = getExifToolFromPath();
+            toolInput.setText(exifToolFromPath.getAbsolutePath());
+            toolLabel.setText(toolLabel.getText() + " (found in your PATH)");
+        } catch( FileNotFoundException ignored ){
+            toolLabel.setText(toolLabel.getText() + " (downloadable below)");
         }
 
         button.setOnAction(new EventHandler<ActionEvent>(){
