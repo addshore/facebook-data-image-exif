@@ -115,7 +115,7 @@ public class Main extends Application {
         hyperLinkExif.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                getHostServices().showDocument("https://sno.phy.queensu.ca/~phil/exiftool/");
+                getHostServices().showDocument("https://addshore.com/redirects/exiftool/exiftoollink");
             }
         });
 
