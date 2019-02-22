@@ -72,14 +72,17 @@ public class Main extends Application {
     private Scene getDataEntryScene(final Stage stage) throws Exception {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
-        final TextField dirInput = (TextField) dataEntryView.getChildren().get(1);
-        final TextField toolInput = (TextField) dataEntryView.getChildren().get(3);
+        // Get element objects from the UI
+        Button button = (Button) dataEntryView.getChildren().get(0);
+        final TextField dirInput = (TextField) dataEntryView.getChildren().get(2);
+        final TextField toolInput = (TextField) dataEntryView.getChildren().get(4);
+
         final Label versionLabel = (Label) dataEntryView.getChildren().get(5);
         final Hyperlink hyperLinkAddshore = (Hyperlink) dataEntryView.getChildren().get(6);
         final Hyperlink hyperLinkExif = (Hyperlink) dataEntryView.getChildren().get(7);
+
         final CheckBox debugCheckbox = (CheckBox) dataEntryView.getChildren().get(8);
         final CheckBox dryRunCheckbox = (CheckBox) dataEntryView.getChildren().get(9);
-        Button button = (Button) dataEntryView.getChildren().get(2);
 
         versionLabel.setText("Version: " + this.version);
 
