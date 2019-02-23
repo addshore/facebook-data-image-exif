@@ -1,5 +1,7 @@
 package com.github.addshore.facebook.data.image.exif;
 
+import com.thebuzzmedia.exiftool.ExifTool;
+import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -164,16 +166,22 @@ public class Main extends Application {
                     stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();
 
+                    ExifToolBuilder builder = new ExifToolBuilder();
+                    builder.withPath( exiftoolFile );
+                    ExifTool exifTool = builder.build();
+
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
+                            "Exiftool: " + exifTool.getVersion() + "\n" +
                             "Debug: " + debugCheckbox.isSelected() + "\n" +
                             "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
+                    System.out.println(initialStateMessage);
 
                     ProcessingTask task = new ProcessingTask(
                             textArea,
                             dirFile,
-                            exiftoolFile,
+                            exifTool,
                             initialStateMessage,
                             debugCheckbox.isSelected(),
                             dryRun

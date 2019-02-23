@@ -1,7 +1,6 @@
 package com.github.addshore.facebook.data.image.exif;
 
 import com.thebuzzmedia.exiftool.ExifTool;
-import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import javafx.application.Platform;
@@ -21,15 +20,15 @@ public class ProcessingTask extends Task {
 
     private TextArea textArea;
     private File dir;
-    private File exiftoolFile;
+    private ExifTool exifTool;
     private String stateMessage;
     private Boolean debugOutput;
     private Boolean dryRun;
 
-    ProcessingTask(TextArea textArea, File dir, File exiftoolFile, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
+    ProcessingTask(TextArea textArea, File dir, ExifTool exifTool, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
         this.textArea = textArea;
         this.dir = dir;
-        this.exiftoolFile = exiftoolFile;
+        this.exifTool = exifTool;
         this.stateMessage = initialStateMessage;
         this.debugOutput = debugOutput;
         this.dryRun = dryRun;
@@ -90,13 +89,6 @@ public class ProcessingTask extends Task {
             appendMessage("This program currently only works with the JSON facebook downloads");
             return null;
         }
-
-        ExifToolBuilder builder = new ExifToolBuilder();
-        builder.withPath( exiftoolFile );
-
-        ExifTool exifTool = builder.build();
-
-        appendDebugMessage("Using exiftool version: " + exifTool.getVersion());
 
         // Process the album
         for (File albumJsonFile : albumJsonFiles) {
