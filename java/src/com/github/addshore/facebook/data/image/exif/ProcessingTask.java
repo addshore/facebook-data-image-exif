@@ -96,6 +96,8 @@ public class ProcessingTask extends Task {
 
         ExifTool exifTool = builder.build();
 
+        appendDebugMessage("Using exiftool version: " + exifTool.getVersion());
+
         // Process the album
         for (File albumJsonFile : albumJsonFiles) {
             InputStream inputStream = new FileInputStream(albumJsonFile);
