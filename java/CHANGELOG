@@ -2,6 +2,7 @@
 
 Cleaned up the UI further
 Made dry run mode a button rather than a check box
+Use File.separator to get correct separator for differing OSs
 
 0.3
 

@@ -70,7 +70,7 @@ public class ProcessingTask extends Task {
     protected Object call() throws Exception {
         // Find all album json files
         appendMessage( "Looking for albums..." );
-        File albumDir = new File( dir.toPath().toString() + "\\album" );
+        File albumDir = new File( dir.toPath().toString() + File.separator + "album" );
         appendDebugMessage("In album dir: " + albumDir.getPath());
 
         File[] albumJsonFiles = albumDir.listFiles(new FilenameFilter() {
@@ -151,7 +151,7 @@ public class ProcessingTask extends Task {
                     }
                 }
 
-                File imageFile = new File(dir.toPath().toString() + "/../" + photoData.getString("uri"));
+                File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
 
                 Map<Tag, String> exifData = new HashMap<Tag, String>();
 
