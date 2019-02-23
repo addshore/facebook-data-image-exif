@@ -33,9 +33,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-        // If Debug?
-        //System.setProperty("exiftool.debug","True");
-
         this.stage = stage;
 
         stage.setTitle("Facebook Data Image Exif Tool");
@@ -177,6 +174,10 @@ public class Main extends Application {
                             "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
                     System.out.println(initialStateMessage);
+
+                    if ( debugCheckbox.isSelected() ) {
+                        System.setProperty("exiftool.debug","True");
+                    }
 
                     ProcessingTask task = new ProcessingTask(
                             textArea,
