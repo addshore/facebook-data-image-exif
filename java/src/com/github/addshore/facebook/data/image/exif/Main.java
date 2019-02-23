@@ -93,9 +93,9 @@ public class Main extends Application {
         });
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
-            dirInput.setPromptText( "C:\\Users\\example\\downloads\\facebook-export\\photos_and_videos" );
+            dirInput.setPromptText( "C:\\Users\\example\\downloads\\extracted-facebook-export" );
         } else {
-            dirInput.setPromptText("/path/to/facebook/export/photos_and_videos/directory");
+            dirInput.setPromptText("/path/to/extracted-facebook-export");
         }
 
         if( System.getProperty("os.name").toLowerCase().contains("windows") ){
@@ -121,29 +121,28 @@ public class Main extends Application {
     private EventHandler<ActionEvent> getButtonClickEventHandler( Boolean dryRun ) {
         return new EventHandler<ActionEvent>(){
 
+            private File getPhotosDirFromInput( String input ) {
+                File inputFile = new File( dirInput.getText() );
+
+                if( inputFile.getPath().endsWith("photos_and_videos") ) {
+                    return inputFile;
+                }
+
+                return new File( inputFile.getPath() + File.separator + "photos_and_videos" );
+            }
+
             @Override
             public void handle(ActionEvent t){
-
-                String exifToolString = toolInput.getText();
-                File exiftoolFile = new File(exifToolString);
-
+                File exiftoolFile = new File(toolInput.getText());
                 if(!exiftoolFile.exists()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Can't find exiftool file specified", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
 
-                String dirPathString = dirInput.getText();
-
-                if(!dirPathString.endsWith( "photos_and_videos" )) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Directory must be your photos_and_videos directory", ButtonType.OK);
-                    alert.showAndWait();
-                    return;
-                }
-
-                File dirFile = new File(dirPathString);
+                File dirFile = getPhotosDirFromInput( dirInput.getText() );
                 if(!dirFile.exists() || !dirFile.isDirectory()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Directory does not exist. ", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Directory does not exist: " + dirFile.getPath(), ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }

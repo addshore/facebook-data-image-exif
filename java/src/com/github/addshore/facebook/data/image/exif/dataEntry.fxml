@@ -27,7 +27,7 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Path to facebook export photos_and_videos directory" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Label text="Path to extracted facebook data download" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
       <JFXTextField promptText="Default prompt text" style="-fx-background-color: #d8dfea;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
