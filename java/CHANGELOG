@@ -1,0 +1,21 @@
+0.4
+
+Cleaned up the UI further
+Made dry run mode a button rather than a check box
+
+0.3
+
+Cleaned up the main UI a little
+Added note and output when used with a HTML data download (not supported yet)
+No longer bundeling exiftool.exe in a windows build (things were going wrong)
+Detecting exiftool in PATH, but allowing the user to override
+
+0.2
+
+Added Version, OS and options to task output
+Added extra optional debug output
+Added a dry run mode
+
+0.1
+
+Initial release
