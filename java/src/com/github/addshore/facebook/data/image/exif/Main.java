@@ -57,6 +57,10 @@ public class Main extends Application {
         throw new FileNotFoundException();
     }
 
+    private Boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
     private Scene getDataEntryScene(final Stage stage) throws Exception {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
@@ -92,15 +96,12 @@ public class Main extends Application {
             }
         });
 
-        if( System.getProperty("os.name").toLowerCase().contains("windows") ){
+        if( isWindows() ){
             dirInput.setPromptText( "C:\\Users\\example\\downloads\\extracted-facebook-export" );
+            toolInput.setPromptText( "C:\\Users\\example\\downloads\\exiftool.exe" );
+
         } else {
             dirInput.setPromptText("/path/to/extracted-facebook-export");
-        }
-
-        if( System.getProperty("os.name").toLowerCase().contains("windows") ){
-            toolInput.setPromptText( "C:\\Users\\example\\downloads\\exiftool.exe" );
-        } else {
             toolInput.setPromptText("/usr/bin/exiftool");
         }
 
@@ -139,7 +140,7 @@ public class Main extends Application {
                     alert.showAndWait();
                     return;
                 }
-                if(System.getProperty("os.name").toLowerCase().contains("windows") && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
+                if(isWindows() && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Please rename your exiftool exe to exiftool.exe", ButtonType.OK);
                     alert.showAndWait();
                     return;
