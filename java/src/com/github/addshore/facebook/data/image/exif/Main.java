@@ -136,7 +136,7 @@ public class Main extends Application {
 
                 String dirPathString = dirInput.getText();
 
-                if( dirPathString.length() < "photos_and_videos".length() || !dirPathString.substring(dirPathString.length() - "photos_and_videos".length()).equals("photos_and_videos")) {
+                if(!dirPathString.endsWith( "photos_and_videos" )) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Directory must be your photos_and_videos directory", ButtonType.OK);
                     alert.showAndWait();
                     return;
