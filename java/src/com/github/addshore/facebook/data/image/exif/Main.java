@@ -139,6 +139,11 @@ public class Main extends Application {
                     alert.showAndWait();
                     return;
                 }
+                if(System.getProperty("os.name").toLowerCase().contains("windows") && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Please rename your exiftool exe to exiftool.exe", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
 
                 File dirFile = getPhotosDirFromInput( dirInput.getText() );
                 if(!dirFile.exists() || !dirFile.isDirectory()) {
