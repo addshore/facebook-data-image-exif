@@ -141,6 +141,10 @@ public class Main extends Application {
                     return;
                 }
                 if(isWindows() && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
+                    // If on windows and we have been given the dir instead of exe file, add the exe to the path
+                    exiftoolFile = new File(exiftoolFile.getPath() + File.separator + "exiftool.exe");
+                }
+                if(isWindows() && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Please rename your exiftool exe to exiftool.exe", ButtonType.OK);
                     alert.showAndWait();
                     return;
