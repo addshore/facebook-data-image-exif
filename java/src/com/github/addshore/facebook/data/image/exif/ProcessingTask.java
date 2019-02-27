@@ -68,6 +68,21 @@ public class ProcessingTask extends Task {
 
     @Override
     protected Object call() throws Exception {
+        try{
+            processTask();
+        } catch( JSONException | IOException exception ) {
+            appendMessage("Something went wrong while running the task.");
+            appendMessage("ERROR: " + exception.getMessage() );
+            appendMessage("Task may not have completely finished.");
+        }
+
+        appendDebugMessage("Closing exiftool");
+        exifTool.close();
+
+        return null;
+    }
+
+    private void processTask() throws IOException, JSONException {
         // Find all album json files
         appendMessage( "Looking for albums..." );
         File albumDir = new File( dir.toPath().toString() + File.separator + "album" );
@@ -88,7 +103,7 @@ public class ProcessingTask extends Task {
         // Stop if we detected no JSON but did find HTML
         if( albumJsonFiles.length == 0 && albumHtmlFiles.length != 0 ) {
             appendMessage("This program currently only works with the JSON facebook downloads");
-            return null;
+            return;
         }
 
         int statProcessedImages = 0;
@@ -138,18 +153,13 @@ public class ProcessingTask extends Task {
             }
         }
 
-        appendDebugMessage("Closing exiftool");
-
-        exifTool.close();
-
+        appendMessage("-------------------------------------------------");
         appendMessage("Task complete");
         appendMessage("Images processed: " + statProcessedImages);
         appendMessage("Images failed: " + statFailedImages);
         if(statFailedImages != 0) {
             appendMessage("See the output for more details...");
         }
-
-        return null;
     }
 
     private void processFile( JSONObject photoData ) throws JSONException, IOException {
