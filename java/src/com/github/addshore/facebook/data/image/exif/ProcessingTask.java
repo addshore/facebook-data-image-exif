@@ -121,18 +121,22 @@ public class ProcessingTask extends Task {
 
                 // Figure out the time the picture was taken
                 appendDebugMessage("Grabbing taken, created and modified dates");
-                String takenTimestamp;
+                String takenTimestamp = null;
                 if (photoMetaData.has("taken_timestamp")) {
                     // Keep timestamp as is
                     takenTimestamp = photoMetaData.getString("taken_timestamp");
                 } else if (photoMetaData.has("modified_timestamp")) {
                     // It's missing, replace with modified
                     takenTimestamp = photoMetaData.getString("modified_timestamp");
-                } else {
+                } else if(photoMetaData.has("creation_timestamp")) {
                     // Fallback to the creation timestamp
                     takenTimestamp = photoMetaData.getString("creation_timestamp");
                 }
-                takenTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(takenTimestamp) * 1000));
+
+                // If the taken timestamp is set, then format it
+                if(takenTimestamp != null) {
+                    takenTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(takenTimestamp) * 1000));
+                }
 
                 // And set a modified timestamp
                 String modifiedTimestamp;
@@ -154,13 +158,16 @@ public class ProcessingTask extends Task {
                 }
 
                 File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
-                appendDebugMessage("Image file path" + imageFile.getPath());
+                appendDebugMessage("Image file path: " + imageFile.getPath());
 
                 appendDebugMessage("Constructing exif data object");
                 Map<Tag, String> exifData = new HashMap<Tag, String>();
 
                 exifData.put( CustomTag.MODIFYDATE, modifiedTimestamp );
-                exifData.put( StandardTag.DATE_TIME_ORIGINAL, takenTimestamp );
+
+                if( takenTimestamp != null ) {
+                    exifData.put( StandardTag.DATE_TIME_ORIGINAL, takenTimestamp );
+                }
 
                 if( photoMetaData.has("camera_make") ) {
                     exifData.put( StandardTag.MAKE, photoMetaData.getString("camera_make") );
@@ -195,7 +202,7 @@ public class ProcessingTask extends Task {
                     appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
                     exifTool.setImageMeta( imageFile, exifData );
                 } else {
-                    appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + "(dryrun)");
+                    appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + " (dryrun)");
                 }
 
             }
