@@ -92,24 +92,30 @@ public class ProcessingTask extends Task {
 
         // Process the album
         for (File albumJsonFile : albumJsonFiles) {
+            appendDebugMessage("Loading album file " + albumJsonFile.getPath());
             InputStream inputStream = new FileInputStream(albumJsonFile);
 
+            appendDebugMessage("Writing to internal string");
             StringWriter writer = new StringWriter();
             IOUtils.copy(inputStream, writer, "UTF-8");
             String jsonTxt = writer.toString();
+            appendDebugMessage("Loading album object");
             JSONObject albumJson = new JSONObject(jsonTxt);
             if (!albumJson.has("photos")) {
                 appendDebugMessage("Album has no photos");
                 continue;
             }
 
+            appendDebugMessage("Getting album photos");
             JSONArray albumPhotos = albumJson.getJSONArray("photos");
 
             appendMessage("Album: " + albumJson.getString("name") + ", " + albumPhotos.length() + " photos");
 
             // Process the photos in the album
             for (int i = 0; i < albumPhotos.length(); i++) {
+                appendDebugMessage("Getting photo data: " + i);
                 JSONObject photoData = albumPhotos.getJSONObject(i);
+
                 appendMessage(" - Processing " + photoData.getString("uri"));
                 JSONObject photoMetaData = photoData.getJSONObject("media_metadata").getJSONObject("photo_metadata");
 

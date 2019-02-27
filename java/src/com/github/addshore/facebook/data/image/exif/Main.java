@@ -155,6 +155,7 @@ public class Main extends Application {
 
                 try {
                     final TextArea textArea = new TextArea();
+                    textArea.setText("Task is starting...");
 
                     textArea.textProperty().addListener(new ChangeListener<Object>() {
                         @Override
@@ -181,7 +182,7 @@ public class Main extends Application {
                     System.out.println(initialStateMessage);
 
                     if ( debugCheckbox.isSelected() ) {
-                        System.setProperty("exiftool.debug","True");
+                        //System.setProperty("exiftool.debug","True");
                     }
 
                     ProcessingTask task = new ProcessingTask(
