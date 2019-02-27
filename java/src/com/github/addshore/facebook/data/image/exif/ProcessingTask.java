@@ -120,6 +120,7 @@ public class ProcessingTask extends Task {
                 JSONObject photoMetaData = photoData.getJSONObject("media_metadata").getJSONObject("photo_metadata");
 
                 // Figure out the time the picture was taken
+                appendDebugMessage("Grabbing taken, created and modified dates");
                 String takenTimestamp;
                 if (photoMetaData.has("taken_timestamp")) {
                     // Keep timestamp as is
@@ -141,6 +142,7 @@ public class ProcessingTask extends Task {
                     modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
                 }
 
+                appendDebugMessage("Grabbing f_stop data");
                 String fStop = null;
                 if (photoMetaData.has("f_stop")) {
                     String[] parts = photoMetaData.getString("f_stop").split("/");
@@ -152,7 +154,9 @@ public class ProcessingTask extends Task {
                 }
 
                 File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
+                appendDebugMessage("Image file path" + imageFile.getPath());
 
+                appendDebugMessage("Constructing exif data object");
                 Map<Tag, String> exifData = new HashMap<Tag, String>();
 
                 exifData.put( CustomTag.MODIFYDATE, modifiedTimestamp );
@@ -190,14 +194,18 @@ public class ProcessingTask extends Task {
                 if(!this.dryRun){
                     appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
                     exifTool.setImageMeta( imageFile, exifData );
+                } else {
+                    appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + "(dryrun)");
                 }
 
             }
         }
 
-        appendMessage("Done!!");
+        appendDebugMessage("Closing exiftool");
 
         exifTool.close();
+
+        appendMessage("Done!!");
 
         return null;
     }
