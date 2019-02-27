@@ -3,6 +3,7 @@
 Even more debug output while task is running
 Windows users now need only specify the directory of exiftool.exe
 Bugfix, script would fail is creation_timestamp was not found in exif data
+Bugfix, issue when image data is not in media_metadata/photo_metadata but in the root instead
 
 0.5
 

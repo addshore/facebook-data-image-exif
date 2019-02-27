@@ -117,7 +117,30 @@ public class ProcessingTask extends Task {
                 JSONObject photoData = albumPhotos.getJSONObject(i);
 
                 appendMessage(" - Processing " + photoData.getString("uri"));
-                JSONObject photoMetaData = photoData.getJSONObject("media_metadata").getJSONObject("photo_metadata");
+
+                JSONObject photoMetaData = null;
+                if(photoData.has("media_metadata")) {
+                    JSONObject mediaMetaData = photoData.getJSONObject("media_metadata");
+                    if( mediaMetaData.has("photo_metadata") ) {
+                        photoMetaData = mediaMetaData.getJSONObject("photo_metadata");
+                    } else {
+                        appendDebugMessage("WARNING: Got media_metadata but no photo_metadata, FAILING for image...");
+                    }
+                } else {
+                    // XXX: should we actually assume this? It's a shame the dump format isn't well documented...
+                    if(photoData.has("creation_timestamp")) {
+                        // If this high level element has the creation_timestamp then assume it as the photo meta data?
+                        photoMetaData = photoData;
+                        appendDebugMessage("Falling back to root meta data for image");
+                    } else {
+                        appendDebugMessage("WARNING: No media_metadata found, and no fallback used, FAILING for image...");
+                    }
+                }
+
+                if(photoMetaData == null) {
+                    appendMessage("Skipping image (due to no meta data found)");
+                    continue;
+                }
 
                 // Figure out the time the picture was taken
                 appendDebugMessage("Grabbing taken, created and modified dates");
