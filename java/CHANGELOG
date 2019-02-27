@@ -1,5 +1,8 @@
 0.7
 
+Catch and helpfully show more errors
+Show summary if images processed at the bottom of output
+
 0.6
 
 Even more debug output while task is running

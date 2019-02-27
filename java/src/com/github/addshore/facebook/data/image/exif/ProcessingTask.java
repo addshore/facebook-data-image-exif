@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -90,6 +91,9 @@ public class ProcessingTask extends Task {
             return null;
         }
 
+        int statProcessedImages = 0;
+        int statFailedImages = 0;
+
         // Process the album
         for (File albumJsonFile : albumJsonFiles) {
             appendDebugMessage("Loading album file " + albumJsonFile.getPath());
@@ -117,117 +121,20 @@ public class ProcessingTask extends Task {
                 JSONObject photoData = albumPhotos.getJSONObject(i);
 
                 appendMessage(" - Processing " + photoData.getString("uri"));
-
-                JSONObject photoMetaData = null;
-                if(photoData.has("media_metadata")) {
-                    JSONObject mediaMetaData = photoData.getJSONObject("media_metadata");
-                    if( mediaMetaData.has("photo_metadata") ) {
-                        photoMetaData = mediaMetaData.getJSONObject("photo_metadata");
-                    } else {
-                        appendDebugMessage("WARNING: Got media_metadata but no photo_metadata, FAILING for image...");
-                    }
-                } else {
-                    // XXX: should we actually assume this? It's a shame the dump format isn't well documented...
-                    if(photoData.has("creation_timestamp")) {
-                        // If this high level element has the creation_timestamp then assume it as the photo meta data?
-                        photoMetaData = photoData;
-                        appendDebugMessage("Falling back to root meta data for image");
-                    } else {
-                        appendDebugMessage("WARNING: No media_metadata found, and no fallback used, FAILING for image...");
-                    }
+                try{
+                    processFile( photoData );
+                    statProcessedImages++;
+                } catch( JSONException jsonException ) {
+                    statFailedImages++;
+                    appendMessage("Something went wrong while getting data for the image.");
+                    appendMessage("ERROR: " + jsonException.getMessage() );
+                    appendMessage("Image has not been processed entirely");
+                } catch( IOException ioException ) {
+                    statFailedImages++;
+                    appendMessage("Something went wrong while writing data to the image.");
+                    appendMessage("ERROR: " + ioException.getMessage() );
+                    appendMessage("Image has not been processed entirely");
                 }
-
-                if(photoMetaData == null) {
-                    appendMessage("Skipping image (due to no meta data found)");
-                    continue;
-                }
-
-                // Figure out the time the picture was taken
-                appendDebugMessage("Grabbing taken, created and modified dates");
-                String takenTimestamp = null;
-                if (photoMetaData.has("taken_timestamp")) {
-                    // Keep timestamp as is
-                    takenTimestamp = photoMetaData.getString("taken_timestamp");
-                } else if (photoMetaData.has("modified_timestamp")) {
-                    // It's missing, replace with modified
-                    takenTimestamp = photoMetaData.getString("modified_timestamp");
-                } else if(photoMetaData.has("creation_timestamp")) {
-                    // Fallback to the creation timestamp
-                    takenTimestamp = photoMetaData.getString("creation_timestamp");
-                }
-
-                // If the taken timestamp is set, then format it
-                if(takenTimestamp != null) {
-                    takenTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(takenTimestamp) * 1000));
-                }
-
-                // And set a modified timestamp
-                String modifiedTimestamp;
-                if (photoMetaData.has("modified_timestamp")) {
-                    modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(photoMetaData.getString("modified_timestamp")) * 1000));
-                } else {
-                    modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
-                }
-
-                appendDebugMessage("Grabbing f_stop data");
-                String fStop = null;
-                if (photoMetaData.has("f_stop")) {
-                    String[] parts = photoMetaData.getString("f_stop").split("/");
-                    if (parts.length > 1) {
-                        fStop = Double.toString(Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]));
-                    } else {
-                        fStop = photoMetaData.getString("f_stop");
-                    }
-                }
-
-                File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
-                appendDebugMessage("Image file path: " + imageFile.getPath());
-
-                appendDebugMessage("Constructing exif data object");
-                Map<Tag, String> exifData = new HashMap<Tag, String>();
-
-                exifData.put( CustomTag.MODIFYDATE, modifiedTimestamp );
-
-                if( takenTimestamp != null ) {
-                    exifData.put( StandardTag.DATE_TIME_ORIGINAL, takenTimestamp );
-                }
-
-                if( photoMetaData.has("camera_make") ) {
-                    exifData.put( StandardTag.MAKE, photoMetaData.getString("camera_make") );
-                }
-                if( photoMetaData.has("camera_model") ) {
-                    exifData.put( StandardTag.MODEL, photoMetaData.getString("camera_model") );
-                }
-
-                if( photoMetaData.has("latitude") ) {
-                    exifData.put( StandardTag.GPS_LATITUDE, photoMetaData.getString("latitude") );
-                    exifData.put( StandardTag.GPS_LATITUDE_REF, photoMetaData.getString("latitude") );
-                    exifData.put( StandardTag.GPS_LONGITUDE, photoMetaData.getString("longitude") );
-                    exifData.put( StandardTag.GPS_LONGITUDE_REF, photoMetaData.getString("longitude") );
-                    exifData.put( StandardTag.GPS_ALTITUDE, "0" );
-                    exifData.put( StandardTag.GPS_ALTITUDE_REF, "0" );
-                }
-
-                if( photoMetaData.has("exposure") ) {
-                    exifData.put( CustomTag.EXPOSURE, photoMetaData.getString("exposure") );
-                }
-                if( photoMetaData.has("iso_speed") ) {
-                    exifData.put( StandardTag.ISO, photoMetaData.getString("iso_speed") );
-                }
-                if( photoMetaData.has("focal_length") ) {
-                    exifData.put( StandardTag.FOCAL_LENGTH, photoMetaData.getString("focal_length") );
-                }
-                if(fStop != null) {
-                    exifData.put( CustomTag.FNUMBER, fStop );
-                }
-
-                if(!this.dryRun){
-                    appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
-                    exifTool.setImageMeta( imageFile, exifData );
-                } else {
-                    appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + " (dryrun)");
-                }
-
             }
         }
 
@@ -235,9 +142,126 @@ public class ProcessingTask extends Task {
 
         exifTool.close();
 
-        appendMessage("Done!!");
+        appendMessage("Task complete");
+        appendMessage("Images processed: " + statProcessedImages);
+        appendMessage("Images failed: " + statFailedImages);
+        if(statFailedImages != 0) {
+            appendMessage("See the output for more details...");
+        }
 
         return null;
+    }
+
+    private void processFile( JSONObject photoData ) throws JSONException, IOException {
+        JSONObject photoMetaData = null;
+        if(photoData.has("media_metadata")) {
+            JSONObject mediaMetaData = photoData.getJSONObject("media_metadata");
+            if( mediaMetaData.has("photo_metadata") ) {
+                photoMetaData = mediaMetaData.getJSONObject("photo_metadata");
+            } else {
+                appendDebugMessage("WARNING: Got media_metadata but no photo_metadata, FAILING for image...");
+            }
+        } else {
+            // XXX: should we actually assume this? It's a shame the dump format isn't well documented...
+            if(photoData.has("creation_timestamp")) {
+                // If this high level element has the creation_timestamp then assume it as the photo meta data?
+                photoMetaData = photoData;
+                appendDebugMessage("Falling back to root meta data for image");
+            } else {
+                appendDebugMessage("WARNING: No media_metadata found, and no fallback used, FAILING for image...");
+            }
+        }
+
+        if(photoMetaData == null) {
+            appendMessage("Skipping image (due to no meta data found)");
+            return;
+        }
+
+        // Figure out the time the picture was taken
+        appendDebugMessage("Grabbing taken, created and modified dates");
+        String takenTimestamp = null;
+        if (photoMetaData.has("taken_timestamp")) {
+            // Keep timestamp as is
+            takenTimestamp = photoMetaData.getString("taken_timestamp");
+        } else if (photoMetaData.has("modified_timestamp")) {
+            // It's missing, replace with modified
+            takenTimestamp = photoMetaData.getString("modified_timestamp");
+        } else if(photoMetaData.has("creation_timestamp")) {
+            // Fallback to the creation timestamp
+            takenTimestamp = photoMetaData.getString("creation_timestamp");
+        }
+
+        // If the taken timestamp is set, then format it
+        if(takenTimestamp != null) {
+            takenTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(takenTimestamp) * 1000));
+        }
+
+        // And set a modified timestamp
+        String modifiedTimestamp;
+        if (photoMetaData.has("modified_timestamp")) {
+            modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(photoMetaData.getString("modified_timestamp")) * 1000));
+        } else {
+            modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+        }
+
+        appendDebugMessage("Grabbing f_stop data");
+        String fStop = null;
+        if (photoMetaData.has("f_stop")) {
+            String[] parts = photoMetaData.getString("f_stop").split("/");
+            if (parts.length > 1) {
+                fStop = Double.toString(Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]));
+            } else {
+                fStop = photoMetaData.getString("f_stop");
+            }
+        }
+
+        File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
+        appendDebugMessage("Image file path: " + imageFile.getPath());
+
+        appendDebugMessage("Constructing exif data object");
+        Map<Tag, String> exifData = new HashMap<Tag, String>();
+
+        exifData.put( CustomTag.MODIFYDATE, modifiedTimestamp );
+
+        if( takenTimestamp != null ) {
+            exifData.put( StandardTag.DATE_TIME_ORIGINAL, takenTimestamp );
+        }
+
+        if( photoMetaData.has("camera_make") ) {
+            exifData.put( StandardTag.MAKE, photoMetaData.getString("camera_make") );
+        }
+        if( photoMetaData.has("camera_model") ) {
+            exifData.put( StandardTag.MODEL, photoMetaData.getString("camera_model") );
+        }
+
+        if( photoMetaData.has("latitude") ) {
+            exifData.put( StandardTag.GPS_LATITUDE, photoMetaData.getString("latitude") );
+            exifData.put( StandardTag.GPS_LATITUDE_REF, photoMetaData.getString("latitude") );
+            exifData.put( StandardTag.GPS_LONGITUDE, photoMetaData.getString("longitude") );
+            exifData.put( StandardTag.GPS_LONGITUDE_REF, photoMetaData.getString("longitude") );
+            exifData.put( StandardTag.GPS_ALTITUDE, "0" );
+            exifData.put( StandardTag.GPS_ALTITUDE_REF, "0" );
+        }
+
+        if( photoMetaData.has("exposure") ) {
+            exifData.put( CustomTag.EXPOSURE, photoMetaData.getString("exposure") );
+        }
+        if( photoMetaData.has("iso_speed") ) {
+            exifData.put( StandardTag.ISO, photoMetaData.getString("iso_speed") );
+        }
+        if( photoMetaData.has("focal_length") ) {
+            exifData.put( StandardTag.FOCAL_LENGTH, photoMetaData.getString("focal_length") );
+        }
+        if(fStop != null) {
+            exifData.put( CustomTag.FNUMBER, fStop );
+        }
+
+        if(!this.dryRun){
+            appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
+            exifTool.setImageMeta( imageFile, exifData );
+        } else {
+            appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + " (dryrun)");
+        }
     }
 
 }
