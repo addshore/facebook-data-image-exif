@@ -38,6 +38,8 @@ public class Main extends Application {
         stage.setTitle("Facebook Data Image Exif Tool");
         Scene dataEntryScene = this.getDataEntryScene( stage );
 
+        //System.setProperty("exiftool.debug","True");
+
         stage.setScene( dataEntryScene );
         stage.show();
     }
@@ -184,10 +186,6 @@ public class Main extends Application {
                             "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
                     System.out.println(initialStateMessage);
-
-                    if ( debugCheckbox.isSelected() ) {
-                        //System.setProperty("exiftool.debug","True");
-                    }
 
                     ProcessingTask task = new ProcessingTask(
                             textArea,
