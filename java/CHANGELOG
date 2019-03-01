@@ -1,3 +1,7 @@
+0.8
+
+Error popup now shown if one or more fields are missing
+
 0.7
 
 Catch and helpfully show more errors

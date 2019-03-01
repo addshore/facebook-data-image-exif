@@ -136,6 +136,12 @@ public class Main extends Application {
 
             @Override
             public void handle(ActionEvent t){
+                if( toolInput.getText().isEmpty() || dirInput.getText().isEmpty() ) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Both fields must be filled", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+
                 File exiftoolFile = new File(toolInput.getText());
                 if(!exiftoolFile.exists()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Can't find exiftool file specified", ButtonType.OK);
