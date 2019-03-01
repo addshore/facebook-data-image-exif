@@ -188,20 +188,22 @@ public class ProcessingTask extends Task {
         }
 
         // Figure out the time the picture was taken
-        appendDebugMessage("Grabbing taken, created and modified dates");
         String takenTimestamp = null;
         if (photoMetaData.has("taken_timestamp")) {
             // Keep timestamp as is
             takenTimestamp = photoMetaData.getString("taken_timestamp");
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from taken_timestamp:" + takenTimestamp);
         } else if (photoMetaData.has("modified_timestamp")) {
             // It's missing, replace with modified
             takenTimestamp = photoMetaData.getString("modified_timestamp");
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from modified_timestamp:" + takenTimestamp);
         } else if(photoMetaData.has("creation_timestamp")) {
             // Fallback to the creation timestamp
             takenTimestamp = photoMetaData.getString("creation_timestamp");
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from creation_timestamp:" + takenTimestamp);
+        } else {
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " could not find a source");
         }
-
-        // If the taken timestamp is set, then format it
         if(takenTimestamp != null) {
             takenTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(takenTimestamp) * 1000));
         }
@@ -210,11 +212,13 @@ public class ProcessingTask extends Task {
         String modifiedTimestamp;
         if (photoMetaData.has("modified_timestamp")) {
             modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date(Long.parseLong(photoMetaData.getString("modified_timestamp")) * 1000));
+            appendDebugMessage(CustomTag.MODIFYDATE + " got from modified_timestamp:" + photoMetaData.getString("modified_timestamp"));
         } else {
             modifiedTimestamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+            appendDebugMessage(CustomTag.MODIFYDATE + " could not find a source, using today");
         }
 
-        appendDebugMessage("Grabbing f_stop data");
+        // fstop
         String fStop = null;
         if (photoMetaData.has("f_stop")) {
             String[] parts = photoMetaData.getString("f_stop").split("/");
@@ -223,6 +227,9 @@ public class ProcessingTask extends Task {
             } else {
                 fStop = photoMetaData.getString("f_stop");
             }
+            appendDebugMessage(CustomTag.FNUMBER + " got data " + fStop);
+        } else {
+            appendDebugMessage(CustomTag.FNUMBER + " could not find data");
         }
 
         File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
@@ -239,28 +246,47 @@ public class ProcessingTask extends Task {
 
         if( photoMetaData.has("camera_make") ) {
             exifData.put( StandardTag.MAKE, photoMetaData.getString("camera_make") );
+            appendDebugMessage(StandardTag.MAKE + " got data " + photoMetaData.getString("camera_make"));
+        } else {
+            appendDebugMessage(StandardTag.MAKE + " could not find data");
         }
         if( photoMetaData.has("camera_model") ) {
             exifData.put( StandardTag.MODEL, photoMetaData.getString("camera_model") );
+            appendDebugMessage(StandardTag.MODEL + " got data " + photoMetaData.getString("camera_model"));
+        } else {
+            appendDebugMessage(StandardTag.MODEL + " could not find data");
         }
 
-        if( photoMetaData.has("latitude") ) {
+        if( photoMetaData.has("latitude") && photoMetaData.has("longitude") ) {
             exifData.put( StandardTag.GPS_LATITUDE, photoMetaData.getString("latitude") );
             exifData.put( StandardTag.GPS_LATITUDE_REF, photoMetaData.getString("latitude") );
             exifData.put( StandardTag.GPS_LONGITUDE, photoMetaData.getString("longitude") );
             exifData.put( StandardTag.GPS_LONGITUDE_REF, photoMetaData.getString("longitude") );
             exifData.put( StandardTag.GPS_ALTITUDE, "0" );
             exifData.put( StandardTag.GPS_ALTITUDE_REF, "0" );
+            appendDebugMessage(StandardTag.GPS_LATITUDE + " got data " + photoMetaData.getString("latitude"));
+            appendDebugMessage(StandardTag.GPS_LONGITUDE + " got data " + photoMetaData.getString("longitude"));
+        } else {
+            appendDebugMessage("COORDINATES could not find data");
         }
 
         if( photoMetaData.has("exposure") ) {
             exifData.put( CustomTag.EXPOSURE, photoMetaData.getString("exposure") );
+            appendDebugMessage(CustomTag.EXPOSURE + " got data " + photoMetaData.getString("exposure"));
+        } else {
+            appendDebugMessage(CustomTag.EXPOSURE + " could not find data");
         }
         if( photoMetaData.has("iso_speed") ) {
             exifData.put( StandardTag.ISO, photoMetaData.getString("iso_speed") );
+            appendDebugMessage(StandardTag.ISO + " got data " + photoMetaData.getString("iso_speed"));
+        } else {
+            appendDebugMessage(StandardTag.ISO + " could not find data");
         }
         if( photoMetaData.has("focal_length") ) {
             exifData.put( StandardTag.FOCAL_LENGTH, photoMetaData.getString("focal_length") );
+            appendDebugMessage(StandardTag.FOCAL_LENGTH + " got data " + photoMetaData.getString("focal_length"));
+        } else {
+            appendDebugMessage(StandardTag.FOCAL_LENGTH + " could not find data");
         }
         if(fStop != null) {
             exifData.put( CustomTag.FNUMBER, fStop );

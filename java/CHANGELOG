@@ -2,6 +2,7 @@
 
 Error popup now shown if one or more fields are missing
 Added browse buttons for the 2 input fields
+Even more debug output (including the data extracted for each image)
 
 0.7
 
