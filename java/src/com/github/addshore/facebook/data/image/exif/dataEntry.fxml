@@ -28,32 +28,71 @@
    </rowConstraints>
    <children>
       <Label text="Path to extracted facebook data download" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <JFXTextField promptText="Default prompt text" style="-fx-background-color: #d8dfea;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding></JFXTextField>
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+          <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <JFXTextField promptText="Default prompt text" style="-fx-background-color: #d8dfea;" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </JFXTextField>
+             <JFXButton minWidth="50.0" mnemonicParsing="false" ripplerFill="#4059a9" style="-fx-background-color: #d8dfea;" text="Browse" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+                 <padding>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                 </padding>
+                 <GridPane.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                 </GridPane.margin></JFXButton>
+         </children>
+      </GridPane>
       <Label text="Path to exiftool program" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <JFXTextField promptText="Default prompt text" style="-fx-background-color: #d8dfea;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding></JFXTextField>
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+          <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <JFXTextField promptText="Default prompt text" style="-fx-background-color: #d8dfea;" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </JFXTextField>
+             <JFXButton minWidth="50.0" mnemonicParsing="false" ripplerFill="#4059a9" style="-fx-background-color: #d8dfea;" text="Browse" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+                 <padding>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                 </padding>
+                 <GridPane.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                 </GridPane.margin></JFXButton>
+         </children>
+      </GridPane>
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="7">
         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints />
+          <RowConstraints />
+            <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Version: XXX" GridPane.rowIndex="0" GridPane.valignment="TOP">
+            <Label text="Version: XXX" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <padding>
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <Hyperlink text="Written by Addshore" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Hyperlink prefHeight="6.0" prefWidth="127.0" text="exiftool by Phil Harvey" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Hyperlink text="Written by Addshore" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Hyperlink prefHeight="6.0" prefWidth="127.0" text="exiftool by Phil Harvey" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="TOP" />
          </children>
       </GridPane>
       <Label layoutX="20.0" layoutY="122.0" text="Note: This program currently only works for JSON downloads" underline="true" GridPane.columnIndex="1" GridPane.valignment="CENTER">

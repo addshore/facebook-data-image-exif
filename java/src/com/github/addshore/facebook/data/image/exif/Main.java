@@ -10,10 +10,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -67,9 +74,17 @@ public class Main extends Application {
         GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
 
         // Get element objects from the UI
-        dirInput = (TextField) dataEntryView.getChildren().get(1);
         final Label toolLabel = (Label) dataEntryView.getChildren().get(2);
-        toolInput = (TextField) dataEntryView.getChildren().get(3);
+
+        // dirInputGrid pain
+        final GridPane dirInputGrid = (GridPane) dataEntryView.getChildren().get(1);
+        dirInput = (TextField) dirInputGrid.getChildren().get(0);
+        final Button dirInputBrowse = (Button) dirInputGrid.getChildren().get(1);
+
+        // exiftoolGrid pain
+        final GridPane toolInputGrid = (GridPane) dataEntryView.getChildren().get(3);
+        toolInput = (TextField) toolInputGrid.getChildren().get(0);
+        final Button toolInputBrowse = (Button) toolInputGrid.getChildren().get(1);
 
         // Details grid pain
         final GridPane linksGrid = (GridPane) dataEntryView.getChildren().get(4);
@@ -117,8 +132,38 @@ public class Main extends Application {
 
         runButton.setOnAction(this.getButtonClickEventHandler(false));
         dryRunButton.setOnAction(this.getButtonClickEventHandler(true));
+        dirInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(dirInput, JFileChooser.DIRECTORIES_ONLY));
+        toolInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(toolInput, JFileChooser.FILES_ONLY));
 
-        return new Scene(dataEntryView, 400, 300);
+        return new Scene(dataEntryView, 500, 250);
+    }
+
+    private EventHandler<ActionEvent> getBrowseButtonClickEventHandler( TextField input, int selectionMode ) {
+        return new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                JFileChooser chooser = new JFileChooser();
+
+                // Add listener on chooser to detect changes to selected file
+                chooser.addPropertyChangeListener(new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY
+                                .equals(evt.getPropertyName())) {
+                            JFileChooser chooser = (JFileChooser)evt.getSource();
+                            try{
+                                File curFile = chooser.getSelectedFile();
+                                input.setText(curFile.getPath());
+                            } catch( Exception ignored ) {
+
+                            }
+                        }
+                    }
+                });
+
+                chooser.setFileSelectionMode(selectionMode);
+                chooser.showOpenDialog(null);
+            }
+        };
     }
 
     private EventHandler<ActionEvent> getButtonClickEventHandler( Boolean dryRun ) {
