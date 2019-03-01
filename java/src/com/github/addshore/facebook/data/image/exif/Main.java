@@ -99,12 +99,12 @@ public class Main extends Application {
         });
 
         if( isWindows() ){
-            dirInput.setPromptText( "C:\\Users\\example\\downloads\\extracted-facebook-export" );
-            toolInput.setPromptText( "C:\\Users\\example\\downloads\\exiftool.exe" );
+            dirInput.setPromptText( "Example: C:\\Users\\example\\downloads\\extracted-facebook-export" );
+            toolInput.setPromptText( "Example: C:\\Users\\example\\downloads\\exiftool.exe" );
 
         } else {
-            dirInput.setPromptText("/path/to/extracted-facebook-export");
-            toolInput.setPromptText("/usr/bin/exiftool");
+            dirInput.setPromptText("Example: /path/to/extracted-facebook-export");
+            toolInput.setPromptText("Example: /usr/bin/exiftool");
         }
 
         try {
