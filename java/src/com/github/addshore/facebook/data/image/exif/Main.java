@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    private String version = "0.7";
+    private String version = "0.8";
     private TextField toolInput;
     private TextField dirInput;
     private CheckBox debugCheckbox;
