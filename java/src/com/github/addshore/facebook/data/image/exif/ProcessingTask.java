@@ -137,8 +137,11 @@ public class ProcessingTask extends Task {
 
                 appendMessage(" - Processing " + photoData.getString("uri"));
                 try{
-                    processFile( photoData );
-                    statProcessedImages++;
+                    if( processFile( photoData ) ) {
+                        statProcessedImages++;
+                    } else {
+                        statFailedImages++;
+                    }
                 } catch( JSONException jsonException ) {
                     statFailedImages++;
                     appendMessage("Something went wrong while getting data for the image.");
@@ -158,11 +161,23 @@ public class ProcessingTask extends Task {
         appendMessage("Images processed: " + statProcessedImages);
         appendMessage("Images failed: " + statFailedImages);
         if(statFailedImages != 0) {
-            appendMessage("See the output for more details...");
+            appendMessage("See the full output for detailed failure reasons...");
         }
     }
 
-    private void processFile( JSONObject photoData ) throws JSONException, IOException {
+    private Boolean processFile( JSONObject photoData ) throws JSONException, IOException {
+        File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
+        appendDebugMessage("Image file path: " + imageFile.getPath());
+
+        if( !imageFile.exists() ) {
+            appendMessage( "ERROR: the file does not exist in the expected location. Is your download complete?" );
+            return false;
+        }
+        if( !imageFile.canWrite() ) {
+            appendMessage( "ERROR: the file is not writable." );
+            return false;
+        }
+
         JSONObject photoMetaData = null;
         if(photoData.has("media_metadata")) {
             JSONObject mediaMetaData = photoData.getJSONObject("media_metadata");
@@ -184,7 +199,7 @@ public class ProcessingTask extends Task {
 
         if(photoMetaData == null) {
             appendMessage("Skipping image (due to no meta data found)");
-            return;
+            return false;
         }
 
         // Figure out the time the picture was taken
@@ -231,9 +246,6 @@ public class ProcessingTask extends Task {
         } else {
             appendDebugMessage(CustomTag.FNUMBER + " could not find data");
         }
-
-        File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
-        appendDebugMessage("Image file path: " + imageFile.getPath());
 
         appendDebugMessage("Constructing exif data object");
         Map<Tag, String> exifData = new HashMap<Tag, String>();
@@ -298,6 +310,8 @@ public class ProcessingTask extends Task {
         } else {
             appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + " (dryrun)");
         }
+
+        return true;
     }
 
 }

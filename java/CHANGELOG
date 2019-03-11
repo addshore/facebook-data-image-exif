@@ -1,5 +1,8 @@
 0.9
 
+Detect missing files from the facebook download and error
+Detect unwritable files in the facebook data and error
+
 0.8
 
 Error popup now shown if one or more fields are missing
