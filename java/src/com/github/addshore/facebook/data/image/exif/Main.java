@@ -233,6 +233,7 @@ public class Main extends Application {
 
                     // Try to create a fancy pooled and stay open exiftool
                     ExifTool exifTool;
+                    boolean stayOpen = true;
                     try {
                         ExifToolBuilder builder = new ExifToolBuilder();
 
@@ -253,12 +254,15 @@ public class Main extends Application {
                              builder.withPoolSize( Runtime.getRuntime().availableProcessors() );
                          }
 
+                         stayOpen = false;
                          exifTool = builder.build();
                      }
 
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
                             "Exiftool: " + exifTool.getVersion() + "\n" +
+                            "Exiftool Poolsize: " + Runtime.getRuntime().availableProcessors() + "\n" +
+                            "Exiftool Stayopen: " + stayOpen + "\n" +
                             "Debug: " + debugCheckbox.isSelected() + "\n" +
                             "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
