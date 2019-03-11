@@ -153,6 +153,9 @@ public class ProcessingTask extends Task {
                     appendMessage("ERROR: " + ioException.getMessage() );
                     appendMessage("Image has not been processed entirely");
                 }
+
+                // Hint to garbage collect after each image?
+                System.gc();
             }
         }
 
