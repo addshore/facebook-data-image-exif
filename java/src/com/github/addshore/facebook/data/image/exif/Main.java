@@ -236,6 +236,7 @@ public class Main extends Application {
                     boolean stayOpen = true;
                     try {
                         ExifToolBuilder builder = new ExifToolBuilder();
+                        builder.withPath( exiftoolFile );
 
                         // If we have more than one processor, use a pool strategy of that size
                         if( Runtime.getRuntime().availableProcessors() > 1 ) {
@@ -248,6 +249,7 @@ public class Main extends Application {
                      catch (UnsupportedFeatureException ex) {
                          // Fallback to just a pooled tool
                          ExifToolBuilder builder = new ExifToolBuilder();
+                         builder.withPath( exiftoolFile );
 
                          // If we have more than one processor, use a pool strategy of that size
                          if( Runtime.getRuntime().availableProcessors() > 1 ) {
