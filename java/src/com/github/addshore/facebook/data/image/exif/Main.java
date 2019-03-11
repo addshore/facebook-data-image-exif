@@ -251,9 +251,10 @@ public class Main extends Application {
                          ExifToolBuilder builder = new ExifToolBuilder();
                          builder.withPath( exiftoolFile );
 
-                         // If we have more than one processor, use a pool strategy of that size
-                         if( Runtime.getRuntime().availableProcessors() > 1 ) {
-                             builder.withPoolSize( Runtime.getRuntime().availableProcessors() );
+                         // If we have more than two processors, use a pool strategy
+                         if( Runtime.getRuntime().availableProcessors() > 2 ) {
+                             // But always leave 1 processor totally free
+                             builder.withPoolSize( Runtime.getRuntime().availableProcessors() - 1 );
                          }
 
                          stayOpen = false;
