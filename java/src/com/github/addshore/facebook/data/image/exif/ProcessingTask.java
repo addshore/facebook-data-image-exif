@@ -5,7 +5,6 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.TextArea;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,19 +14,20 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProcessingTask extends Task {
 
-    private TextArea textArea;
+    private List<String>  outputList;
     private File dir;
     private ExifTool exifTool;
     private String stateMessage;
     private Boolean debugOutput;
     private Boolean dryRun;
 
-    ProcessingTask(TextArea textArea, File dir, ExifTool exifTool, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
-        this.textArea = textArea;
+    ProcessingTask(List<String> outputList, File dir, ExifTool exifTool, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
+        this.outputList = outputList;
         this.dir = dir;
         this.exifTool = exifTool;
         this.stateMessage = initialStateMessage;
@@ -37,8 +37,9 @@ public class ProcessingTask extends Task {
 
     private void appendMessage( String string ) {
         System.out.println("ProcessingTask: " + string);
+        // Do the update on the UI thread
+        Platform.runLater(() -> outputList.add(string));
         stateMessage = stateMessage + "\n" + string;
-        updateUI();
     }
 
     private void appendDebugMessage( String string ) {
@@ -48,22 +49,6 @@ public class ProcessingTask extends Task {
         } else {
             System.out.println("ProcessingTask: " + string);
         }
-    }
-
-    private void updateUI() {
-        Runnable updater = new Runnable() {
-            @Override
-            public void run() {
-                updateMessage( stateMessage );
-                textArea.setText(stateMessage);
-                // Trigger the listener that makes the field scrollable?
-                // https://stackoverflow.com/questions/17799160/javafx-textarea-and-autoscroll
-                textArea.appendText("");
-            }
-        };
-
-        // UI update is run on the Application thread
-        Platform.runLater(updater);
     }
 
     @Override

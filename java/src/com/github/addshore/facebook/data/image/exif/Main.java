@@ -5,8 +5,9 @@ import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -213,23 +213,23 @@ public class Main extends Application {
                 }
 
                 try {
-                    final TextArea textArea = new TextArea();
-                    textArea.setText("Task is starting...");
+                    ObservableList<String> lines = FXCollections.observableArrayList();
+                    ListView<String> listView = new ListView<>(lines);
+                    listView.setEditable(false);
 
-                    textArea.textProperty().addListener(new ChangeListener<Object>() {
-                        @Override
-                        public void changed(ObservableValue<?> observable, Object oldValue,
-                                            Object newValue) {
-                            textArea.setScrollTop(Double.MAX_VALUE); //this will scroll to the bottom
-                            //use Double.MIN_VALUE to scroll to the top
-                        }
+                    // Keep the list view scrolled to the bottom
+                    lines.addListener((ListChangeListener<String>) c -> {
+                        listView.scrollTo(listView.getItems().size() - 1 );
                     });
+
+                    lines.add("Task is starting...");
 
                     // Make sure if the window is closed while task is still running, everything exits
                     Platform.setImplicitExit(true);
 
-                    stage.setScene(new Scene(textArea, 800, 500));
+                    stage.setScene(new Scene(listView, 800, 500));
                     stage.show();
+
 
                     // Try to create a fancy pooled and stay open exiftool
                     ExifTool exifTool;
@@ -272,7 +272,7 @@ public class Main extends Application {
                     System.out.println(initialStateMessage);
 
                     ProcessingTask task = new ProcessingTask(
-                            textArea,
+                            lines,
                             dirFile,
                             exifTool,
                             initialStateMessage,
