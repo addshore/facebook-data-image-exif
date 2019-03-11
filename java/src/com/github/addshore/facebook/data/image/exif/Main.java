@@ -4,6 +4,7 @@ import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -223,6 +224,9 @@ public class Main extends Application {
                             //use Double.MIN_VALUE to scroll to the top
                         }
                     });
+
+                    // Make sure if the window is closed while task is still running, everything exits
+                    Platform.setImplicitExit(true);
 
                     stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();

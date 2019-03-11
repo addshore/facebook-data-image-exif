@@ -3,6 +3,7 @@
 Detect missing files from the facebook download and error
 Detect unwritable files in the facebook data and error
 Exiftool uses a pool and reuses the same process where possible (speed improvement)
+Application will actually stop if closed once task has already started
 
 0.8
 
