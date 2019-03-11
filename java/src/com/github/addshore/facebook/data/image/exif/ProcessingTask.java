@@ -76,8 +76,8 @@ public class ProcessingTask extends Task {
             appendMessage("Task may not have completely finished.");
         }
 
-        appendDebugMessage("Closing exiftool");
-        exifTool.close();
+        // We used to close exif tool here, but instead just leave it running until the user closes the app.
+        // I should probably just figure out how to make sure that all tasks in the pool have finished before closing...
 
         return null;
     }

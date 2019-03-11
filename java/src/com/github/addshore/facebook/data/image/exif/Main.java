@@ -2,6 +2,7 @@ package com.github.addshore.facebook.data.image.exif;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
+import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -226,9 +227,30 @@ public class Main extends Application {
                     stage.setScene(new Scene(textArea, 800, 500));
                     stage.show();
 
-                    ExifToolBuilder builder = new ExifToolBuilder();
-                    builder.withPath( exiftoolFile );
-                    ExifTool exifTool = builder.build();
+                    // Try to create a fancy pooled and stay open exiftool
+                    ExifTool exifTool;
+                    try {
+                        ExifToolBuilder builder = new ExifToolBuilder();
+
+                        // If we have more than one processor, use a pool strategy of that size
+                        if( Runtime.getRuntime().availableProcessors() > 1 ) {
+                            builder.withPoolSize( Runtime.getRuntime().availableProcessors() );
+                        }
+
+                        builder.enableStayOpen();
+                        exifTool = builder.build();
+                    }
+                     catch (UnsupportedFeatureException ex) {
+                         // Fallback to just a pooled tool
+                         ExifToolBuilder builder = new ExifToolBuilder();
+
+                         // If we have more than one processor, use a pool strategy of that size
+                         if( Runtime.getRuntime().availableProcessors() > 1 ) {
+                             builder.withPoolSize( Runtime.getRuntime().availableProcessors() );
+                         }
+
+                         exifTool = builder.build();
+                     }
 
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
