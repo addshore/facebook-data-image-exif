@@ -1,4 +1,4 @@
 .idea
 *.iml
-java/target
-java/out
+target
+out
