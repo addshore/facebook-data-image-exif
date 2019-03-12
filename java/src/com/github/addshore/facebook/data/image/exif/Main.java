@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 public class Main extends Application {
@@ -224,14 +226,12 @@ public class Main extends Application {
 
                     lines.add("Task is starting...");
 
-                    // Make sure if the window is closed while task is still running, everything exits
-                    Platform.setImplicitExit(true);
-
                     stage.setScene(new Scene(listView, 800, 500));
                     stage.show();
 
-
                     // Try to create a fancy pooled and stay open exiftool
+                    // TODO exif tool creation should be done as part of the task (not in the UI thread)
+                    final ExifTool finalExifTool;
                     ExifTool exifTool;
                     boolean stayOpen = true;
                     try {
@@ -261,9 +261,11 @@ public class Main extends Application {
                          exifTool = builder.build();
                      }
 
+                    finalExifTool = exifTool;
+
                     String initialStateMessage = "Version: " + version + "\n" +
                             "OS: " + System.getProperty("os.name") + "\n" +
-                            "Exiftool: " + exifTool.getVersion() + "\n" +
+                            "Exiftool: " + finalExifTool.getVersion() + "\n" +
                             "Exiftool Poolsize: " + Runtime.getRuntime().availableProcessors() + "\n" +
                             "Exiftool Stayopen: " + stayOpen + "\n" +
                             "Debug: " + debugCheckbox.isSelected() + "\n" +
@@ -274,16 +276,41 @@ public class Main extends Application {
                     ProcessingTask task = new ProcessingTask(
                             lines,
                             dirFile,
-                            exifTool,
+                            finalExifTool,
                             initialStateMessage,
                             debugCheckbox.isSelected(),
                             dryRun
                     );
+
+                    // Make sure if the window is closed while task is still running, everything exits
+                    // There is probably a nicer way to do all of this, but this should do for now...
+                    Platform.setImplicitExit(true);
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent t) {
+                            // Cancel the task (will stop processing & close exiftool etc)
+                            task.cancel();
+
+                            if(!task.taskIsTidy) {
+                                // Wait for a bit for the task to finish tidying up (taskIsTidy will be true when that is done)
+                                // This does lock the UI for 1 second, but this was while the task was executing, so the user probably expects some delay.
+                                // There is probably a cleaner way to do this....
+                                try {
+                                    TimeUnit.SECONDS.sleep(2);
+                                } catch (InterruptedException ignored) {
+                                }
+                            }
+
+                            // Force the whole thing to come down..
+                            Platform.exit();
+                            System.exit(0);
+                        }
+                    });
+
+                    // Start a single simple thread
                     Thread th = new Thread(task);
-                    th.setDaemon(false);
-                    System.out.println("Main: pre thread start");
+                    th.setDaemon(true);
                     th.start();
-                    System.out.println("Main: post thread start");
 
                 } catch (Exception e) {
                     e.printStackTrace();

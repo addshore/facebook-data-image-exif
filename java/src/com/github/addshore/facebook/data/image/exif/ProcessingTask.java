@@ -25,6 +25,7 @@ public class ProcessingTask extends Task {
     private String stateMessage;
     private Boolean debugOutput;
     private Boolean dryRun;
+    Boolean taskIsTidy = true;
 
     ProcessingTask(List<String> outputList, File dir, ExifTool exifTool, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
         this.outputList = outputList;
@@ -52,7 +53,10 @@ public class ProcessingTask extends Task {
     }
 
     @Override
-    protected Object call() throws Exception {
+    protected Object call() {
+        // Task is starting, so no longer tidy
+        taskIsTidy = false;
+
         try{
             processTask();
         } catch( JSONException | IOException exception ) {
@@ -61,8 +65,16 @@ public class ProcessingTask extends Task {
             appendMessage("Task may not have completely finished.");
         }
 
-        // We used to close exif tool here, but instead just leave it running until the user closes the app.
-        // I should probably just figure out how to make sure that all tasks in the pool have finished before closing...
+        try {
+            exifTool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            appendDebugMessage( "There was a problem closing exiftool" );
+            appendDebugMessage( e.getMessage() );
+        }
+
+        // We have cleaned up, so the task is tidy again...
+        taskIsTidy = true;
 
         return null;
     }
@@ -139,17 +151,33 @@ public class ProcessingTask extends Task {
                     appendMessage("Image has not been processed entirely");
                 }
 
-                // Hint to garbage collect after each image?
-                System.gc();
+                // If the task has been cancelled, then stop processing images
+                if( this.isCancelled() ) {
+                    // TODO some sort of cancelled exception instead?
+                    break;
+                }
+            }
+
+            // Hint to garbage collect after each album?
+            System.gc();
+
+            // If the task has been cancelled, then stop processing albums
+            if( this.isCancelled() ) {
+                // TODO some sort of cancelled exception instead?
+                break;
             }
         }
 
-        appendMessage("-------------------------------------------------");
-        appendMessage("Task complete");
-        appendMessage("Images processed: " + statProcessedImages);
-        appendMessage("Images failed: " + statFailedImages);
-        if(statFailedImages != 0) {
-            appendMessage("See the full output for detailed failure reasons...");
+        if( this.isCancelled() ) {
+            appendMessage( "Task cancelled, run not complete" );
+        } else {
+            appendMessage("-------------------------------------------------");
+            appendMessage("Task complete");
+            appendMessage("Images processed: " + statProcessedImages);
+            appendMessage("Images failed: " + statFailedImages);
+            if(statFailedImages != 0) {
+                appendMessage("See the full output for detailed failure reasons...");
+            }
         }
     }
 
