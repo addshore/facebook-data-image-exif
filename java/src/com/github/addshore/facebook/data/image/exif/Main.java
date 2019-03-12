@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 
-    private String version = "0.9";
+    private String version = "0.10";
     private TextField toolInput;
     private TextField dirInput;
     private CheckBox debugCheckbox;
