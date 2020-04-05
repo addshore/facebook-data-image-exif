@@ -77,6 +77,21 @@ public class Main extends Application {
         throw new FileNotFoundException();
     }
 
+    /**
+     * For development and testing only, checks for the existence of the facebook-example directory
+     * for use with pre populating the input fields to save time
+     *
+     * @return File
+     * @throws FileNotFoundException
+     */
+    private File getDevTestFacebookExport() throws FileNotFoundException {
+        File possibleDevTestExample = new File(System.getProperty("user.dir") + File.separator + "facebook-example");
+        if( possibleDevTestExample.exists() ) {
+            return possibleDevTestExample;
+        }
+        throw new FileNotFoundException();
+    }
+
     private Boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
     }
@@ -133,6 +148,14 @@ public class Main extends Application {
             toolInput.setPromptText("Example: /usr/bin/exiftool");
         }
 
+        // Try to pre fill the data input field with the test data location for development
+        try {
+            final File devTestExportPath = getDevTestFacebookExport();
+            dirInput.setText(devTestExportPath.getAbsolutePath());
+        } catch( FileNotFoundException ignored ){
+        }
+
+        // Try to pre fill the exiftool input with a value from PATH
         try {
             final File exifToolFromPath = getExifToolFromPath();
             toolInput.setText(exifToolFromPath.getAbsolutePath());
