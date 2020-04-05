@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 
-    private String version = "0.10";
+    private String version = "0.11";
     private Stage stage;
     private MainView view;
 
