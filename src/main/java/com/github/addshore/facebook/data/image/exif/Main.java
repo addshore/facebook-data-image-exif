@@ -33,10 +33,8 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Application {
 
     private String version = "0.10";
-    private TextField toolInput;
-    private TextField dirInput;
-    private CheckBox debugCheckbox;
     private Stage stage;
+    private MainView view;
 
     public static void main(String[] args) {
         launch(args);
@@ -97,42 +95,17 @@ public class Main extends Application {
     }
 
     private Scene getDataEntryScene(final Stage stage) throws Exception {
-        GridPane dataEntryView = FXMLLoader.load(getClass().getResource("dataEntry.fxml"));
+        view = new MainView();
 
-        // Get element objects from the UI
-        final Label toolLabel = (Label) dataEntryView.getChildren().get(2);
+        view.versionLabel.setText("Version: " + this.version);
 
-        // dirInputGrid pain
-        final GridPane dirInputGrid = (GridPane) dataEntryView.getChildren().get(1);
-        dirInput = (TextField) dirInputGrid.getChildren().get(0);
-        final Button dirInputBrowse = (Button) dirInputGrid.getChildren().get(1);
-
-        // exiftoolGrid pain
-        final GridPane toolInputGrid = (GridPane) dataEntryView.getChildren().get(3);
-        toolInput = (TextField) toolInputGrid.getChildren().get(0);
-        final Button toolInputBrowse = (Button) toolInputGrid.getChildren().get(1);
-
-        // Details grid pain
-        final GridPane linksGrid = (GridPane) dataEntryView.getChildren().get(4);
-        final Label versionLabel = (Label) linksGrid.getChildren().get(0);
-        final Hyperlink hyperLinkAddshore = (Hyperlink) linksGrid.getChildren().get(1);
-        final Hyperlink hyperLinkExif = (Hyperlink) linksGrid.getChildren().get(2);
-
-        // Submission grid
-        final GridPane submitGrid = (GridPane) dataEntryView.getChildren().get(6);
-        Button runButton = (Button) submitGrid.getChildren().get(0);
-        Button dryRunButton = (Button) submitGrid.getChildren().get(1);
-        debugCheckbox = (CheckBox) submitGrid.getChildren().get(2);
-
-        versionLabel.setText("Version: " + this.version);
-
-        hyperLinkAddshore.setOnAction(new EventHandler<ActionEvent>() {
+        view.hyperLinkAddshore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 getHostServices().showDocument("https://addshore.com/redirects/exiftool/writtenbylink");
             }
         });
-        hyperLinkExif.setOnAction(new EventHandler<ActionEvent>() {
+        view.hyperLinkExif.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 getHostServices().showDocument("https://addshore.com/redirects/exiftool/exiftoollink");
@@ -140,36 +113,36 @@ public class Main extends Application {
         });
 
         if( isWindows() ){
-            dirInput.setPromptText( "Example: C:\\Users\\example\\downloads\\extracted-facebook-export" );
-            toolInput.setPromptText( "Example: C:\\Users\\example\\downloads\\exiftool.exe" );
+            view.dirInput.setPromptText( "Example: C:\\Users\\example\\downloads\\extracted-facebook-export" );
+            view.toolInput.setPromptText( "Example: C:\\Users\\example\\downloads\\exiftool.exe" );
 
         } else {
-            dirInput.setPromptText("Example: /path/to/extracted-facebook-export");
-            toolInput.setPromptText("Example: /usr/bin/exiftool");
+            view.dirInput.setPromptText("Example: /path/to/extracted-facebook-export");
+            view.toolInput.setPromptText("Example: /usr/bin/exiftool");
         }
 
         // Try to pre fill the data input field with the test data location for development
         try {
             final File devTestExportPath = getDevTestFacebookExport();
-            dirInput.setText(devTestExportPath.getAbsolutePath());
+            view.dirInput.setText(devTestExportPath.getAbsolutePath());
         } catch( FileNotFoundException ignored ){
         }
 
         // Try to pre fill the exiftool input with a value from PATH
         try {
             final File exifToolFromPath = getExifToolFromPath();
-            toolInput.setText(exifToolFromPath.getAbsolutePath());
-            toolLabel.setText(toolLabel.getText() + " (found in your PATH)");
+            view.toolInput.setText(exifToolFromPath.getAbsolutePath());
+            view.toolLabel.setText(view.toolLabel.getText() + " (found in your PATH)");
         } catch( FileNotFoundException ignored ){
-            toolLabel.setText(toolLabel.getText() + " (downloadable below)");
+            view.toolLabel.setText(view.toolLabel.getText() + " (downloadable below)");
         }
 
-        runButton.setOnAction(this.getButtonClickEventHandler(false));
-        dryRunButton.setOnAction(this.getButtonClickEventHandler(true));
-        dirInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(dirInput, JFileChooser.DIRECTORIES_ONLY));
-        toolInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(toolInput, JFileChooser.FILES_ONLY));
+        view.runButton.setOnAction(this.getButtonClickEventHandler(false));
+        view.dryRunButton.setOnAction(this.getButtonClickEventHandler(true));
+        view.dirInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(view.dirInput, JFileChooser.DIRECTORIES_ONLY));
+        view.toolInputBrowse.setOnAction(this.getBrowseButtonClickEventHandler(view.toolInput, JFileChooser.FILES_ONLY));
 
-        return new Scene(dataEntryView, 500, 250);
+        return new Scene(view.dataEntryView, 500, 250);
     }
 
     private EventHandler<ActionEvent> getBrowseButtonClickEventHandler( TextField input, int selectionMode ) {
@@ -204,7 +177,7 @@ public class Main extends Application {
         return new EventHandler<ActionEvent>(){
 
             private File getPhotosDirFromInput( String input ) {
-                File inputFile = new File( dirInput.getText() );
+                File inputFile = new File( view.dirInput.getText() );
 
                 if( inputFile.getPath().endsWith("photos_and_videos") ) {
                     return inputFile;
@@ -215,13 +188,13 @@ public class Main extends Application {
 
             @Override
             public void handle(ActionEvent t){
-                if( toolInput.getText().isEmpty() || dirInput.getText().isEmpty() ) {
+                if( view.toolInput.getText().isEmpty() || view.dirInput.getText().isEmpty() ) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Both fields must be filled", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
 
-                File exiftoolFile = new File(toolInput.getText());
+                File exiftoolFile = new File(view.toolInput.getText());
                 if(!exiftoolFile.exists()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Can't find exiftool file " + exiftoolFile.getPath(), ButtonType.OK);
                     alert.showAndWait();
@@ -241,7 +214,7 @@ public class Main extends Application {
                     return;
                 }
 
-                File dirFile = getPhotosDirFromInput( dirInput.getText() );
+                File dirFile = getPhotosDirFromInput( view.dirInput.getText() );
                 if(!dirFile.exists() || !dirFile.isDirectory()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Directory does not exist: " + dirFile.getPath(), ButtonType.OK);
                     alert.showAndWait();
@@ -302,7 +275,7 @@ public class Main extends Application {
                             "Exiftool: " + finalExifTool.getVersion() + "\n" +
                             "Exiftool Poolsize: " + Runtime.getRuntime().availableProcessors() + "\n" +
                             "Exiftool Stayopen: " + stayOpen + "\n" +
-                            "Debug: " + debugCheckbox.isSelected() + "\n" +
+                            "Debug: " + view.debugCheckbox.isSelected() + "\n" +
                             "Dry run: " + dryRun + "\n" +
                             "-------------------------------------------------";
                     System.out.println(initialStateMessage);
@@ -312,8 +285,11 @@ public class Main extends Application {
                             dirFile,
                             finalExifTool,
                             initialStateMessage,
-                            debugCheckbox.isSelected(),
-                            dryRun
+                            new MainOptions(
+                                    view.debugCheckbox.isSelected(),
+                                    dryRun,
+                                    view.overwriteCheckbox.isSelected()
+                            )
                     );
 
                     // Make sure if the window is closed while task is still running, everything exits

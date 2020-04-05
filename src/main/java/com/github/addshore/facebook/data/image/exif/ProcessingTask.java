@@ -3,7 +3,6 @@ package com.github.addshore.facebook.data.image.exif;
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.Format;
 import com.thebuzzmedia.exiftool.Tag;
-import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -19,25 +18,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singletonList;
-
 public class ProcessingTask extends Task {
 
     private List<String>  outputList;
     private File dir;
     private ExifTool exifTool;
     private String stateMessage;
-    private Boolean debugOutput;
-    private Boolean dryRun;
+    private MainOptions mainOptions;
     Boolean taskIsTidy = true;
 
-    ProcessingTask(List<String> outputList, File dir, ExifTool exifTool, String initialStateMessage, Boolean debugOutput, Boolean dryRun){
+    ProcessingTask(List<String> outputList, File dir, ExifTool exifTool, String initialStateMessage, MainOptions mainOptions){
         this.outputList = outputList;
         this.dir = dir;
         this.exifTool = exifTool;
         this.stateMessage = initialStateMessage;
-        this.debugOutput = debugOutput;
-        this.dryRun = dryRun;
+        this.mainOptions = mainOptions;
     }
 
     private void appendMessage( String string ) {
@@ -49,7 +44,7 @@ public class ProcessingTask extends Task {
 
     private void appendDebugMessage( String string ) {
         string = "debug: " + string;
-        if ( this.debugOutput ) {
+        if ( this.mainOptions.isDebugMode() ) {
             this.appendMessage(  string );
         } else {
             System.out.println("ProcessingTask: " + string);
@@ -326,8 +321,11 @@ public class ProcessingTask extends Task {
 
         // This can be used to add more args to the execution of exiftool
         Format format = CustomFormat.DEFAULT;
+        if(mainOptions.shouldOverwriteOriginals()) {
+            format = CustomFormat.DEFAULT_OVERWRITE_ORIGINAL;
+        }
 
-        if(!this.dryRun){
+        if(!this.mainOptions.isDryMode()){
             appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
             exifTool.setImageMeta( imageFile, format, exifData );
         } else {
