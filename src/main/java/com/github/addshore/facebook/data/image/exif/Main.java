@@ -105,6 +105,12 @@ public class Main extends Application {
                 getHostServices().showDocument("https://addshore.com/redirects/exiftool/writtenbylink");
             }
         });
+        view.hyperLinkCoffee.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                getHostServices().showDocument("https://addshore.com/redirects/exiftool/coffeelink");
+            }
+        });
         view.hyperLinkExif.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {

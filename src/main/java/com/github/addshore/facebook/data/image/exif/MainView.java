@@ -28,6 +28,7 @@ public class MainView {
 
     public final Label versionLabel;
     public final Hyperlink hyperLinkAddshore;
+    public final Hyperlink hyperLinkCoffee;
     public final Hyperlink hyperLinkExif;
 
     public final Button runButton;
@@ -57,7 +58,8 @@ public class MainView {
         linksGrid = (GridPane) dataEntryView.getChildren().get(4);
         versionLabel = (Label) linksGrid.getChildren().get(0);
         hyperLinkAddshore = (Hyperlink) linksGrid.getChildren().get(1);
-        hyperLinkExif = (Hyperlink) linksGrid.getChildren().get(2);
+        hyperLinkCoffee = (Hyperlink) linksGrid.getChildren().get(2);
+        hyperLinkExif = (Hyperlink) linksGrid.getChildren().get(3);
 
         // Submission grid
         submitGrid = (GridPane) dataEntryView.getChildren().get(6);

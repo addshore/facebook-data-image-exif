@@ -81,6 +81,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints />
@@ -92,8 +93,9 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <Hyperlink text="Written by Addshore" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Hyperlink prefHeight="6.0" prefWidth="127.0" text="exiftool by Phil Harvey" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Hyperlink text="by Addshore" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Hyperlink text="(buy me a coffee)" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Hyperlink prefHeight="6.0" prefWidth="127.0" text="exiftool by Phil Harvey" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="TOP" />
          </children>
       </GridPane>
       <Label layoutX="20.0" layoutY="122.0" text="Note: This program currently only works for JSON downloads" underline="true" GridPane.columnIndex="1" GridPane.valignment="CENTER">
