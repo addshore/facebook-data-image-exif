@@ -194,6 +194,8 @@ public class ProcessingTask extends Task {
         }
 
         JSONObject photoMetaData = null;
+
+        // First look for the actual meta data for the media file that was uploaded
         if(photoData.has("media_metadata")) {
             JSONObject mediaMetaData = photoData.getJSONObject("media_metadata");
             if( mediaMetaData.has("photo_metadata") ) {
@@ -201,18 +203,17 @@ public class ProcessingTask extends Task {
             } else {
                 appendDebugMessage("WARNING: Got media_metadata but no photo_metadata, FAILING for image...");
             }
-        } else {
-            // XXX: should we actually assume this? It's a shame the dump format isn't well documented...
-            if(photoData.has("creation_timestamp")) {
-                // If this high level element has the creation_timestamp then assume it as the photo meta data?
-                photoMetaData = photoData;
-                appendDebugMessage("Falling back to root meta data for image");
-            } else {
-                appendDebugMessage("WARNING: No media_metadata found, and no fallback used, FAILING for image...");
-            }
         }
-
+        // Otherwise use the higher level data, which isn't data about the photo itself, but rather about the photo upload to facebook
+        // which won't have things like iso... but will have the creation_timestamp
+        if(photoMetaData == null && photoData.has("creation_timestamp")) {
+            // If this high level element has the creation_timestamp then assume it as the photo meta data?
+            photoMetaData = photoData;
+            appendDebugMessage("Falling back to root meta data for image");
+        }
+        // Otherwise we couldn't find anything at all :( so skip the file...
         if(photoMetaData == null) {
+            appendDebugMessage("WARNING: No media_metadata found, and no fallback used, FAILING for image...");
             appendMessage("Skipping image (due to no meta data found)");
             return false;
         }
@@ -222,16 +223,20 @@ public class ProcessingTask extends Task {
         if (photoMetaData.has("taken_timestamp")) {
             // Keep timestamp as is
             takenTimestamp = photoMetaData.getString("taken_timestamp");
-            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from taken_timestamp:" + takenTimestamp);
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from taken_timestamp of media file:" + takenTimestamp);
         } else if (photoMetaData.has("modified_timestamp")) {
             // It's missing, replace with modified
             takenTimestamp = photoMetaData.getString("modified_timestamp");
-            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from modified_timestamp:" + takenTimestamp);
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from modified_timestamp of media file:" + takenTimestamp);
         } else if(photoMetaData.has("creation_timestamp")) {
             // Fallback to the creation timestamp
             takenTimestamp = photoMetaData.getString("creation_timestamp");
-            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from creation_timestamp:" + takenTimestamp);
-        } else {
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from creation_timestamp of media file:" + takenTimestamp);
+        } else if(photoData.has("creation_timestamp")) {
+            // Fallback to the facebook upload creation timestamp, rather than one from the media file itself..
+            takenTimestamp = photoData.getString("creation_timestamp");
+            appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " got from creation_timestamp of facebook upload:" + takenTimestamp);
+        } else{
             appendDebugMessage(StandardTag.DATE_TIME_ORIGINAL + " could not find a source");
         }
         if(takenTimestamp != null) {
