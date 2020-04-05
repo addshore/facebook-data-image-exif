@@ -55,6 +55,13 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Looks for an exiftool executable in the system PATH
+     * where an exiftool executable would be any file that without an extension has the string name "exiftool"
+     *
+     * @return File
+     * @throws FileNotFoundException
+     */
     private File getExifToolFromPath() throws FileNotFoundException {
         for (String dirString: System.getenv("PATH").split(System.getProperty("path.separator"))) {
             File dir = new File(dirString);
@@ -193,16 +200,20 @@ public class Main extends Application {
 
                 File exiftoolFile = new File(toolInput.getText());
                 if(!exiftoolFile.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Can't find exiftool file specified", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Can't find exiftool file " + exiftoolFile.getPath(), ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
-                if(isWindows() && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
-                    // If on windows and we have been given the dir instead of exe file, add the exe to the path
+
+                // If on Windows and we have been given the dir instead of exe file, add the exe to the path
+                if(isWindows() &&  exiftoolFile.isDirectory()) {
                     exiftoolFile = new File(exiftoolFile.getPath() + File.separator + "exiftool.exe");
                 }
+
+                // If on Windows we have not been given a path to a file called exiftool.exe then complain
+                // The standard download from the exiftool website gives you exiftool(-k).exe :(
                 if(isWindows() && !exiftoolFile.getPath().endsWith("exiftool.exe")) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Please rename your exiftool exe to exiftool.exe", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Please rename your " + exiftoolFile.getPath() + " to exiftool.exe", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
