@@ -1,7 +1,9 @@
 package com.github.addshore.facebook.data.image.exif;
 
 import com.thebuzzmedia.exiftool.ExifTool;
+import com.thebuzzmedia.exiftool.Format;
 import com.thebuzzmedia.exiftool.Tag;
+import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -16,6 +18,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonList;
 
 public class ProcessingTask extends Task {
 
@@ -320,9 +324,12 @@ public class ProcessingTask extends Task {
             exifData.put( CustomTag.FNUMBER, fStop );
         }
 
+        // This can be used to add more args to the execution of exiftool
+        Format format = CustomFormat.DEFAULT;
+
         if(!this.dryRun){
             appendDebugMessage("calling setImageMeta for " + photoData.getString("uri"));
-            exifTool.setImageMeta( imageFile, exifData );
+            exifTool.setImageMeta( imageFile, format, exifData );
         } else {
             appendDebugMessage("skipping setImageMeta for " + photoData.getString("uri") + " (dryrun)");
         }
