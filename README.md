@@ -2,7 +2,7 @@
 
 Instructions can be found [here](https://addshore.com/2020/04/add-exif-data-back-to-facebook-images-0-10/)
 
-Downloads can be found on the releases page!
+Downloads can be found on [the releases page!](https://github.com/addshore/facebook-data-image-exif/releases)
 
 **Old blog posts**
 
