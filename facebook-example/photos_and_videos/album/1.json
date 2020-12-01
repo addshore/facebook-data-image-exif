@@ -2,7 +2,7 @@
   "name": "Album 1 JSON",
   "photos": [
     {
-      "uri": "photos_and_videos/second_album/a.jpg",
+      "uri": "https://interncache-ftw.fbcdn.net/v/t31.0-8/a.jpg?sdlfjglkj5kl4j4kj34;lkj3;lkj53",
       "creation_timestamp": 1437454657,
       "media_metadata": {
         "photo_metadata": {
@@ -23,7 +23,7 @@
       }
     },
     {
-      "uri": "photos_and_videos/second_album/b.jpg",
+      "uri": "https://interncache-ftw.fbcdn.net/v/t31.0-8/b.jpg?sdlfjglkj5kl4j4kj34;lkj3;lkj53",
       "creation_timestamp": 1437454647,
       "media_metadata": {
         "photo_metadata": {

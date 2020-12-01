@@ -123,8 +123,9 @@ public class ProcessingTask extends Task {
 
             appendDebugMessage("Getting album photos");
             JSONArray albumPhotos = albumJson.getJSONArray("photos");
-
-            appendMessage("Album: " + albumJson.getString("name") + ", " + albumPhotos.length() + " photos");
+            
+            String albumName = albumJson.getString("name");
+            appendMessage("Album: " + albumName + ", " + albumPhotos.length() + " photos");
 
             // Process the photos in the album
             for (int i = 0; i < albumPhotos.length(); i++) {
@@ -133,7 +134,7 @@ public class ProcessingTask extends Task {
 
                 appendMessage(" - Processing " + photoData.getString("uri"));
                 try{
-                    if( processFile( photoData ) ) {
+                    if( processFile(photoData, albumName) ) {
                         statProcessedImages++;
                     } else {
                         statFailedImages++;
@@ -180,8 +181,12 @@ public class ProcessingTask extends Task {
         }
     }
 
-    private Boolean processFile( JSONObject photoData ) throws JSONException, IOException {
-        File imageFile = new File(dir.getParentFile().toPath().toString() + File.separator + photoData.getString("uri"));
+    private Boolean processFile( JSONObject photoData, String albumName ) throws JSONException, IOException {
+        String fileName = photoData.getString("uri").split("/")[5].split(".jpg")[0] + ".jpg";
+        String filePath = "photos_and_videos/" + albumName + File.separator + fileName;
+        appendDebugMessage("DEBUG: file path is: " + filePath);
+        File imageFile = new File(dir.getParentFile().toPath().toString() + filePath);
+
         appendDebugMessage("Image file path: " + imageFile.getPath());
 
         if( !imageFile.exists() ) {
