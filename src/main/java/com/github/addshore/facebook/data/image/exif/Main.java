@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 
+    private static final String POSTS_DIRECTORY = "posts";
     private String version = "0.11";
     private Stage stage;
     private MainView view;
@@ -178,14 +179,14 @@ public class Main extends Application {
     private EventHandler<ActionEvent> getButtonClickEventHandler( Boolean dryRun ) {
         return new EventHandler<ActionEvent>(){
 
-            private File getPhotosDirFromInput( String input ) {
+            private File getPostsDirFromInput( String input ) {
                 File inputFile = new File( view.dirInput.getText() );
 
-                if( inputFile.getPath().endsWith("photos_and_videos") ) {
+                if( inputFile.getPath().endsWith(POSTS_DIRECTORY) ) {
                     return inputFile;
                 }
 
-                return new File( inputFile.getPath() + File.separator + "photos_and_videos" );
+                return new File( inputFile.getPath() + File.separator + POSTS_DIRECTORY );
             }
 
             @Override
@@ -216,7 +217,7 @@ public class Main extends Application {
                     return;
                 }
 
-                File dirFile = getPhotosDirFromInput( view.dirInput.getText() );
+                File dirFile = getPostsDirFromInput( view.dirInput.getText() );
                 if(!dirFile.exists() || !dirFile.isDirectory()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Directory does not exist: " + dirFile.getPath(), ButtonType.OK);
                     alert.showAndWait();
