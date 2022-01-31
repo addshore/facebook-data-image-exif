@@ -4,7 +4,7 @@
 
 #### 0.11-alpha1 (development)
 
-Built with JFK 11 instead of JDK 8
+* Built with JFK 11 instead of JDK 8
 
 #### 0.10 (5 April 2020)
 

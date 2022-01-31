@@ -32,6 +32,24 @@ JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ mvn clean package
 Github actions are configured on this repository and will build JARs for you.
 
 You will find these JARs in the build output of Pull Requests.
+
+### Releasing
+
+Bump the version in 2 places in code, and write the CHANGELOG.
+
+Navigate to the Github Actions build for the commit that you are looking to release from.
+
+Test the jar locally. =]
+
+Make the release:
+- "Draft a new release on Github"
+- Enter the tag for the version you coded in
+- Enter the changelog into the release description
+- Rename the JAR you tested "with-dependencies" to "facebook-data-image-exif.jar"
+- Attach the JAR to the release
+- Hit "Publish release"
+- TADA!
+
 ## Further Reading
 
 - This tool (in a PHP form) was [originally created in 2016](https://addshore.com/2016/09/add-exif-data-back-to-facebook-images/).
