@@ -1,4 +1,10 @@
-#### 0.11 (development)
+#### 0.12 (21 January 2021)
+
+* Update expected directory name from 'photos_and_videos' to 'posts' ([Thanks loganrosen](https://github.com/addshore/facebook-data-image-exif/pull/22))
+
+#### 0.11-alpha1 (development)
+
+Built with JFK 11 instead of JDK 8
 
 #### 0.10 (5 April 2020)
 

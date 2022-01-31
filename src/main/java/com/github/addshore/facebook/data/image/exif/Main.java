@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Application {
 
     private static final String POSTS_DIRECTORY = "posts";
-    private String version = "0.11";
+    private String version = "0.12";
     private Stage stage;
     private MainView view;
 

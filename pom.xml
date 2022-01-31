@@ -4,7 +4,7 @@
     <groupId>com.github.addshore.facebook.data.image.exif</groupId>
     <artifactId>facebook-data-image-exif</artifactId>
     <packaging>jar</packaging>
-    <version>0.11</version>
+    <version>0.12</version>
     <name>facebook-data-image-exif</name>
     <url>http://maven.apache.org</url>
     <properties>
