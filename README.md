@@ -18,7 +18,7 @@ Downloads can be found on [the releases page!](https://github.com/addshore/faceb
 You need [JDK 11](https://openjdk.java.net/projects/jdk/11/).
 
 ```sh
-sudo apt-get install openjdk-11-jdk
+sudo apt-get install openjdk-11-jdk maven
 ```
 
 You can build a JAR using Maven:
